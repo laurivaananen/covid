@@ -1,0 +1,15 @@
+* {
+  color: blue;
+}
+
+ul {
+  list-style: none;
+}
+
+.covid-country {
+  display: flex;
+}
+
+.covid-country > li:not(:last-child) {
+  margin-right: 1em;
+}
