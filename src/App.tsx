@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import axios from "axios";
 import * as d3 from "d3-dsv";
-import "./style.css";
 
 const App = () => {
   const [covidData, setCovidData] = useState([] as any);
@@ -28,8 +27,8 @@ const App = () => {
 
   return (
     <div>
-      <ul className="covid-list">
-        <ul className="covid-country">
+      <ul>
+        <ul className="text-green-300">
           <li>Country</li>
           <li>Total</li>
         </ul>
@@ -40,7 +39,7 @@ const App = () => {
         )}
         {covidData.map((x: any) => {
           return (
-            <ul className="covid-country">
+            <ul>
               <li>{x["Country/Region"]}</li>
               <li>{x["3/15/20"]}</li>
             </ul>
