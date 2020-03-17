@@ -26,7 +26,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="text-gray-800 text-md leading-5 antialiased">
+    <div className="text-gray-800 sm:text-base text-sm leading-5 antialiased">
       <ul>
         {covidData.split("\n").map((row: string, index: number) => {
           return (
