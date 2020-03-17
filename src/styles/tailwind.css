@@ -415,7 +415,7 @@ ul {
  */
 
 html {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 1 */
+  font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 1 */
   line-height: 1.5; /* 2 */
 }
 
@@ -848,7 +848,7 @@ video {
 }
 
 .bg-green-300 {
-  background-color: #9ae6b4;
+  background-color: #9c4221;
 }
 
 .bg-green-400 {
@@ -1220,7 +1220,7 @@ video {
 }
 
 .hover\:bg-green-300:hover {
-  background-color: #9ae6b4;
+  background-color: #9c4221;
 }
 
 .hover\:bg-green-400:hover {
@@ -1592,7 +1592,7 @@ video {
 }
 
 .focus\:bg-green-300:focus {
-  background-color: #9ae6b4;
+  background-color: #9c4221;
 }
 
 .focus\:bg-green-400:focus {
@@ -2044,7 +2044,7 @@ video {
 }
 
 .border-green-300 {
-  border-color: #9ae6b4;
+  border-color: #9c4221;
 }
 
 .border-green-400 {
@@ -2416,7 +2416,7 @@ video {
 }
 
 .hover\:border-green-300:hover {
-  border-color: #9ae6b4;
+  border-color: #9c4221;
 }
 
 .hover\:border-green-400:hover {
@@ -2788,7 +2788,7 @@ video {
 }
 
 .focus\:border-green-300:focus {
-  border-color: #9ae6b4;
+  border-color: #9c4221;
 }
 
 .focus\:border-green-400:focus {
@@ -3731,7 +3731,7 @@ video {
 }
 
 .font-sans {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .font-serif {
@@ -6653,19 +6653,19 @@ video {
 }
 
 .placeholder-green-300::-webkit-input-placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .placeholder-green-300:-ms-input-placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .placeholder-green-300::-ms-input-placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .placeholder-green-300::placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .placeholder-green-400::-webkit-input-placeholder {
@@ -8141,19 +8141,19 @@ video {
 }
 
 .focus\:placeholder-green-300:focus::-webkit-input-placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .focus\:placeholder-green-300:focus:-ms-input-placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .focus\:placeholder-green-300:focus::-ms-input-placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .focus\:placeholder-green-300:focus::placeholder {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .focus\:placeholder-green-400:focus::-webkit-input-placeholder {
@@ -9412,7 +9412,7 @@ video {
 }
 
 .text-green-300 {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .text-green-400 {
@@ -9784,7 +9784,7 @@ video {
 }
 
 .hover\:text-green-300:hover {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .hover\:text-green-400:hover {
@@ -10156,7 +10156,7 @@ video {
 }
 
 .focus\:text-green-300:focus {
-  color: #9ae6b4;
+  color: #9c4221;
 }
 
 .focus\:text-green-400:focus {
@@ -13489,7 +13489,7 @@ video {
   }
 
   .sm\:bg-green-300 {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .sm\:bg-green-400 {
@@ -13861,7 +13861,7 @@ video {
   }
 
   .sm\:hover\:bg-green-300:hover {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .sm\:hover\:bg-green-400:hover {
@@ -14233,7 +14233,7 @@ video {
   }
 
   .sm\:focus\:bg-green-300:focus {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .sm\:focus\:bg-green-400:focus {
@@ -14685,7 +14685,7 @@ video {
   }
 
   .sm\:border-green-300 {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .sm\:border-green-400 {
@@ -15057,7 +15057,7 @@ video {
   }
 
   .sm\:hover\:border-green-300:hover {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .sm\:hover\:border-green-400:hover {
@@ -15429,7 +15429,7 @@ video {
   }
 
   .sm\:focus\:border-green-300:focus {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .sm\:focus\:border-green-400:focus {
@@ -16372,7 +16372,7 @@ video {
   }
 
   .sm\:font-sans {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
   .sm\:font-serif {
@@ -19294,19 +19294,19 @@ video {
   }
 
   .sm\:placeholder-green-300::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:placeholder-green-300:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:placeholder-green-300::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:placeholder-green-300::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:placeholder-green-400::-webkit-input-placeholder {
@@ -20782,19 +20782,19 @@ video {
   }
 
   .sm\:focus\:placeholder-green-300:focus::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:focus\:placeholder-green-300:focus:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:focus\:placeholder-green-300:focus::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:focus\:placeholder-green-300:focus::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:focus\:placeholder-green-400:focus::-webkit-input-placeholder {
@@ -22053,7 +22053,7 @@ video {
   }
 
   .sm\:text-green-300 {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:text-green-400 {
@@ -22425,7 +22425,7 @@ video {
   }
 
   .sm\:hover\:text-green-300:hover {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:hover\:text-green-400:hover {
@@ -22797,7 +22797,7 @@ video {
   }
 
   .sm\:focus\:text-green-300:focus {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .sm\:focus\:text-green-400:focus {
@@ -26131,7 +26131,7 @@ video {
   }
 
   .md\:bg-green-300 {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .md\:bg-green-400 {
@@ -26503,7 +26503,7 @@ video {
   }
 
   .md\:hover\:bg-green-300:hover {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .md\:hover\:bg-green-400:hover {
@@ -26875,7 +26875,7 @@ video {
   }
 
   .md\:focus\:bg-green-300:focus {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .md\:focus\:bg-green-400:focus {
@@ -27327,7 +27327,7 @@ video {
   }
 
   .md\:border-green-300 {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .md\:border-green-400 {
@@ -27699,7 +27699,7 @@ video {
   }
 
   .md\:hover\:border-green-300:hover {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .md\:hover\:border-green-400:hover {
@@ -28071,7 +28071,7 @@ video {
   }
 
   .md\:focus\:border-green-300:focus {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .md\:focus\:border-green-400:focus {
@@ -29014,7 +29014,7 @@ video {
   }
 
   .md\:font-sans {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
   .md\:font-serif {
@@ -31936,19 +31936,19 @@ video {
   }
 
   .md\:placeholder-green-300::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:placeholder-green-300:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:placeholder-green-300::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:placeholder-green-300::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:placeholder-green-400::-webkit-input-placeholder {
@@ -33424,19 +33424,19 @@ video {
   }
 
   .md\:focus\:placeholder-green-300:focus::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:focus\:placeholder-green-300:focus:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:focus\:placeholder-green-300:focus::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:focus\:placeholder-green-300:focus::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:focus\:placeholder-green-400:focus::-webkit-input-placeholder {
@@ -34695,7 +34695,7 @@ video {
   }
 
   .md\:text-green-300 {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:text-green-400 {
@@ -35067,7 +35067,7 @@ video {
   }
 
   .md\:hover\:text-green-300:hover {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:hover\:text-green-400:hover {
@@ -35439,7 +35439,7 @@ video {
   }
 
   .md\:focus\:text-green-300:focus {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .md\:focus\:text-green-400:focus {
@@ -38773,7 +38773,7 @@ video {
   }
 
   .lg\:bg-green-300 {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .lg\:bg-green-400 {
@@ -39145,7 +39145,7 @@ video {
   }
 
   .lg\:hover\:bg-green-300:hover {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .lg\:hover\:bg-green-400:hover {
@@ -39517,7 +39517,7 @@ video {
   }
 
   .lg\:focus\:bg-green-300:focus {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .lg\:focus\:bg-green-400:focus {
@@ -39969,7 +39969,7 @@ video {
   }
 
   .lg\:border-green-300 {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .lg\:border-green-400 {
@@ -40341,7 +40341,7 @@ video {
   }
 
   .lg\:hover\:border-green-300:hover {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .lg\:hover\:border-green-400:hover {
@@ -40713,7 +40713,7 @@ video {
   }
 
   .lg\:focus\:border-green-300:focus {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .lg\:focus\:border-green-400:focus {
@@ -41656,7 +41656,7 @@ video {
   }
 
   .lg\:font-sans {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
   .lg\:font-serif {
@@ -44578,19 +44578,19 @@ video {
   }
 
   .lg\:placeholder-green-300::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:placeholder-green-300:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:placeholder-green-300::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:placeholder-green-300::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:placeholder-green-400::-webkit-input-placeholder {
@@ -46066,19 +46066,19 @@ video {
   }
 
   .lg\:focus\:placeholder-green-300:focus::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:focus\:placeholder-green-300:focus:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:focus\:placeholder-green-300:focus::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:focus\:placeholder-green-300:focus::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:focus\:placeholder-green-400:focus::-webkit-input-placeholder {
@@ -47337,7 +47337,7 @@ video {
   }
 
   .lg\:text-green-300 {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:text-green-400 {
@@ -47709,7 +47709,7 @@ video {
   }
 
   .lg\:hover\:text-green-300:hover {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:hover\:text-green-400:hover {
@@ -48081,7 +48081,7 @@ video {
   }
 
   .lg\:focus\:text-green-300:focus {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .lg\:focus\:text-green-400:focus {
@@ -51415,7 +51415,7 @@ video {
   }
 
   .xl\:bg-green-300 {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .xl\:bg-green-400 {
@@ -51787,7 +51787,7 @@ video {
   }
 
   .xl\:hover\:bg-green-300:hover {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .xl\:hover\:bg-green-400:hover {
@@ -52159,7 +52159,7 @@ video {
   }
 
   .xl\:focus\:bg-green-300:focus {
-    background-color: #9ae6b4;
+    background-color: #9c4221;
   }
 
   .xl\:focus\:bg-green-400:focus {
@@ -52611,7 +52611,7 @@ video {
   }
 
   .xl\:border-green-300 {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .xl\:border-green-400 {
@@ -52983,7 +52983,7 @@ video {
   }
 
   .xl\:hover\:border-green-300:hover {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .xl\:hover\:border-green-400:hover {
@@ -53355,7 +53355,7 @@ video {
   }
 
   .xl\:focus\:border-green-300:focus {
-    border-color: #9ae6b4;
+    border-color: #9c4221;
   }
 
   .xl\:focus\:border-green-400:focus {
@@ -54298,7 +54298,7 @@ video {
   }
 
   .xl\:font-sans {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
   .xl\:font-serif {
@@ -57220,19 +57220,19 @@ video {
   }
 
   .xl\:placeholder-green-300::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:placeholder-green-300:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:placeholder-green-300::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:placeholder-green-300::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:placeholder-green-400::-webkit-input-placeholder {
@@ -58708,19 +58708,19 @@ video {
   }
 
   .xl\:focus\:placeholder-green-300:focus::-webkit-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:focus\:placeholder-green-300:focus:-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:focus\:placeholder-green-300:focus::-ms-input-placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:focus\:placeholder-green-300:focus::placeholder {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:focus\:placeholder-green-400:focus::-webkit-input-placeholder {
@@ -59979,7 +59979,7 @@ video {
   }
 
   .xl\:text-green-300 {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:text-green-400 {
@@ -60351,7 +60351,7 @@ video {
   }
 
   .xl\:hover\:text-green-300:hover {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:hover\:text-green-400:hover {
@@ -60723,7 +60723,7 @@ video {
   }
 
   .xl\:focus\:text-green-300:focus {
-    color: #9ae6b4;
+    color: #9c4221;
   }
 
   .xl\:focus\:text-green-400:focus {

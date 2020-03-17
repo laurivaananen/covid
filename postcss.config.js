@@ -4,7 +4,7 @@ const autoprefixer = require("autoprefixer");
 
 module.exports = {
   plugins: [
-    tailwindcss("./tailwind.js"),
+    tailwindcss("./tailwind.config.js"),
     autoprefixer(),
     purgecss({
       content: ["./src/**/*.html"]
