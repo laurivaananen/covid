@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import axios from "axios";
 import * as d3 from "d3-dsv";
 import "./style.css";
 
 const App = () => {
   const [covidData, setCovidData] = useState([] as any);
+  const [status, setStatus] = useState("");
 
   const FetchData = async () => {
+    setStatus("Loading..");
     const result = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
     );
@@ -17,6 +19,7 @@ const App = () => {
       return Number.parseInt(row2["3/15/20"]) - Number.parseInt(row["3/15/20"]);
     });
     setCovidData(parsed);
+    setStatus("");
   };
 
   useEffect(() => {
@@ -30,6 +33,11 @@ const App = () => {
           <li>Country</li>
           <li>Total</li>
         </ul>
+        {status && (
+          <ul>
+            <li>{status}</li>
+          </ul>
+        )}
         {covidData.map((x: any) => {
           return (
             <ul className="covid-country">
