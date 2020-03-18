@@ -54,11 +54,6 @@ const App = () => {
 
             return newRow;
           })
-          // .map((row: string[]) => {
-          //   const latest = row[row.length - 1];
-          //   row[row.length] = latest;
-          //   return row;
-          // })
           .map((row: Array<string | number>, index: number) => {
             return (
               <ul
@@ -66,30 +61,30 @@ const App = () => {
                   !(index % 2) ? "bg-gray-200" : ""
                 }`}
               >
-                {row
-                  // .filter(
-                  //   (_columnName: string, index: number, columns: string[]) => {
-                  //     return index === 1 || index > columns.length - 4;
-                  //   }
-                  // )
-                  .map((value: string | number, index: number, orig) => {
-                    if (index === orig.length - 1) {
-                      if (Math.sign(value as number) > 0) {
-                        return (
-                          <li className="flex-1 text-red-400 font-bold">
-                            +{value}%
-                          </li>
-                        );
-                      } else if (Math.sign(value as number) < 0) {
-                        return (
-                          <li className="flex-1 text-green-400 font-bold">
-                            {value}%
-                          </li>
-                        );
-                      }
+                {row.map((value: string | number, index: number, orig) => {
+                  if (index === orig.length - 1) {
+                    if (Math.sign(value as number) > 0) {
+                      return (
+                        <li className="flex-1 text-red-500 font-bold">
+                          +{value}%
+                        </li>
+                      );
+                    } else if (Math.sign(value as number) < 0) {
+                      return (
+                        <li className="flex-1 text-green-400 font-bold">
+                          {value}%
+                        </li>
+                      );
+                    } else {
+                      return (
+                        <li className="flex-1 text-yellow-500 font-bold">
+                          +{value}%
+                        </li>
+                      );
                     }
-                    return <li className="flex-1">{value}</li>;
-                  })}
+                  }
+                  return <li className="flex-1">{value}</li>;
+                })}
               </ul>
             );
           })}
