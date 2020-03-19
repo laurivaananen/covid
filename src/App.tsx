@@ -45,19 +45,19 @@ const App = () => {
   return (
     <div className="text-gray-800 sm:text-base text-sm leading-5 antialiased">
       <ul>
-        <ul className={`flex py-4`}>
-          <li className="font-bold w-1/6 mx-4">Region</li>
+        <ul className={`flex py-4 w-full`}>
+          <li className="font-bold w-1/6 mx-2 sm:mx-4">Region</li>
           {/* <li className="font-bold">Total Infected</li>
           <li className="font-bold">Total Deaths</li>
           <li className="font-bold">Total Recovered</li> */}
-          <li className="font-bold w-4/6 mx-4">
+          <li className="font-bold w-4/6 mx-2 sm:mx-4">
             <span className="text-red-400">Deaths</span>
             <span className="font-normal text-gray-500 sm:px-4"> / </span>
             <span className="text-yellow-400">Infections</span>
             <span className="font-normal text-gray-500 sm:px-4"> / </span>
             <span className="text-green-400">Recoveries</span>
           </li>
-          <li className="font-bold w-1/6 mx-4">Infections Past Week</li>
+          <li className="font-bold w-1/6 mx-2 sm:mx-4">Infections Past Week</li>
         </ul>
         {covidDataInfected
           .slice(1)
@@ -102,11 +102,15 @@ const App = () => {
           })
           .map((row: Array<string | number>, index: number) => {
             return (
-              <ul className={`flex py-2 ${!(index % 2) ? "bg-gray-200" : ""}`}>
+              <ul
+                className={`flex py-2 ${
+                  !(index % 2) ? "bg-gray-200" : ""
+                } w-full`}
+              >
                 {row.map((value: string | number, index: number, orig) => {
                   if (index === orig.length - 4) {
                     return (
-                      <li className="w-4/6 mx-4">
+                      <li className="w-4/6 mx-2 sm:mx-4">
                         <div className="bg-gray-100 h-full flex">
                           <div
                             className="bg-red-400 h-full"
@@ -146,7 +150,7 @@ const App = () => {
                     }
                   }
                   if (index === 0) {
-                    return <li className="mx-4 w-1/6">{value}</li>;
+                    return <li className="mx-2 sm:mx-4 w-1/6">{value}</li>;
                   }
                 })}
               </ul>
