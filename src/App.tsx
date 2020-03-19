@@ -121,7 +121,7 @@ const App = () => {
                             className="bg-yellow-400 h-full flex"
                             style={{ width: `${row[index]}%` }}
                           >
-                            <span className="mx-auto text-yellow-600 font-bold">
+                            <span className="m-auto text-yellow-600 font-bold">
                               {row[index - 1]}
                             </span>
                           </div>
@@ -136,8 +136,10 @@ const App = () => {
                   if (index === orig.length - 1) {
                     if (Math.sign(value as number) > 0) {
                       return (
-                        <li className="text-red-500 font-bold w-3/12">
-                          +{value}%
+                        <li className="w-3/12 flex">
+                          <span className="text-red-500 font-bold my-auto">
+                            +{value}%
+                          </span>
                         </li>
                       );
                     } else if (Math.sign(value as number) < 0) {
