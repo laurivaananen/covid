@@ -45,12 +45,19 @@ const App = () => {
   return (
     <div className="text-gray-800 sm:text-base text-sm leading-5 antialiased">
       <ul>
-        <ul className={`flex py-4 px-4`}>
-          <li className="flex-1 font-bold">Region</li>
-          <li className="flex-1 font-bold">Total Infected</li>
-          <li className="flex-1 font-bold">Total Deaths</li>
-          <li className="flex-1 font-bold">Total Recovered</li>
-          <li className="flex-1 font-bold">Infections Past Week</li>
+        <ul className={`flex py-4`}>
+          <li className="font-bold w-1/6 mx-4">Region</li>
+          {/* <li className="font-bold">Total Infected</li>
+          <li className="font-bold">Total Deaths</li>
+          <li className="font-bold">Total Recovered</li> */}
+          <li className="font-bold w-4/6 mx-4">
+            <span className="text-red-400">Deaths</span>
+            <span className="font-normal text-gray-500 sm:px-4"> / </span>
+            <span className="text-yellow-400">Infections</span>
+            <span className="font-normal text-gray-500 sm:px-4"> / </span>
+            <span className="text-green-400">Recoveries</span>
+          </li>
+          <li className="font-bold w-1/6 mx-4">Infections Past Week</li>
         </ul>
         {covidDataInfected
           .slice(1)
@@ -62,22 +69,32 @@ const App = () => {
               const region = `${row[1]}, ${row[0]}`;
               newRow.push(region);
             }
-            const latest = Number.parseInt(row[row.length - 1]);
-            newRow.push(latest);
+            const totalInfections = Number.parseInt(row[row.length - 1]);
+            // newRow.push(totalInfections);
 
-            const totalDeaths =
-              covidDataDeaths[index + 1][covidDataDeaths[index + 1].length - 1];
-            newRow.push(totalDeaths);
+            const totalDeaths = Number.parseInt(
+              covidDataDeaths[index + 1][covidDataDeaths[index + 1].length - 1]
+            );
+            // newRow.push(totalDeaths);
 
-            const totalRecovered =
+            const totalRecovered = Number.parseInt(
               covidDataRecovered[index + 1][
                 covidDataRecovered[index + 1].length - 1
-              ];
-            newRow.push(totalRecovered);
+              ]
+            );
+            // newRow.push(totalRecovered);
+
+            const totalCases = totalInfections + totalDeaths + totalRecovered;
+            const infectionsPercent = (totalInfections / totalCases) * 100;
+            newRow.push(infectionsPercent);
+            const deathsPercent = (totalDeaths / totalCases) * 100;
+            newRow.push(deathsPercent);
+            const recoveredPercent = (totalRecovered / totalCases) * 100;
+            newRow.push(recoveredPercent);
 
             const threeDaysAgo = Number.parseInt(row[row.length - 8]);
-            console.log(newRow[0], latest, threeDaysAgo);
-            const difference = latest - threeDaysAgo;
+            console.log(newRow[0], totalInfections, threeDaysAgo);
+            const difference = totalInfections - threeDaysAgo;
             const percentage = (difference / threeDaysAgo) * 100;
             newRow.push(percentage.toFixed(1));
 
@@ -85,34 +102,52 @@ const App = () => {
           })
           .map((row: Array<string | number>, index: number) => {
             return (
-              <ul
-                className={`flex py-2 px-4 ${
-                  !(index % 2) ? "bg-gray-200" : ""
-                }`}
-              >
+              <ul className={`flex py-2 ${!(index % 2) ? "bg-gray-200" : ""}`}>
                 {row.map((value: string | number, index: number, orig) => {
+                  if (index === orig.length - 4) {
+                    return (
+                      <li className="w-4/6 mx-4">
+                        <div className="bg-gray-100 h-full flex">
+                          <div
+                            className="bg-red-400 h-full"
+                            style={{ width: `${row[index + 1]}%` }}
+                          ></div>
+                          <div
+                            className="bg-yellow-400 h-full"
+                            style={{ width: `${row[index]}%` }}
+                          ></div>
+                          <div
+                            className="bg-green-400 h-full"
+                            style={{ width: `${row[index + 2]}%` }}
+                          ></div>
+                        </div>
+                      </li>
+                    );
+                  }
                   if (index === orig.length - 1) {
                     if (Math.sign(value as number) > 0) {
                       return (
-                        <li className="flex-1 text-red-500 font-bold">
+                        <li className="text-red-500 font-bold w-1/6">
                           +{value}%
                         </li>
                       );
                     } else if (Math.sign(value as number) < 0) {
                       return (
-                        <li className="flex-1 text-green-400 font-bold">
+                        <li className="text-green-400 font-bold w-1/6">
                           {value}%
                         </li>
                       );
                     } else {
                       return (
-                        <li className="flex-1 text-yellow-500 font-bold">
+                        <li className="text-yellow-500 font-bold w-1/6">
                           +{value}%
                         </li>
                       );
                     }
                   }
-                  return <li className="flex-1">{value}</li>;
+                  if (index === 0) {
+                    return <li className="mx-4 w-1/6">{value}</li>;
+                  }
                 })}
               </ul>
             );
