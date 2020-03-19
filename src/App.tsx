@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { orchid } from "color-name";
+import csvParser from "csv-parse/lib/sync";
 
 const App = () => {
-  const [covidData, setCovidData] = useState([] as Array<string[]>);
+  const [covidDataInfected, setCovidDataInfected] = useState([] as Array<
+    string[]
+  >);
+  const [covidDataDeaths, setCovidDataDeaths] = useState([] as Array<string[]>);
+  const [covidDataRecovered, setCovidDataRecovered] = useState([] as Array<
+    string[]
+  >);
 
   const FetchData = async () => {
-    const result = await axios(
+    const infectedResponse = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
     );
-    const sortedData = result.data
-      .split("\n")
-      .slice(1)
-      .map((row: string) => row.split(/,"|",|,(?=\S)/));
+    const infectedData = csvParser(infectedResponse.data);
 
-    sortedData.sort((row: string, row2: string) => {
-      return (
-        Number.parseInt(row2[row2.length - 1]) -
-        Number.parseInt(row[row.length - 1])
-      );
-    });
-    setCovidData(sortedData);
+    const deathsResponse = await axios(
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
+    );
+    const deathsData = csvParser(deathsResponse.data);
+
+    const revoredResponse = await axios(
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"
+    );
+    const recoveredData = csvParser(revoredResponse.data);
+
+    // sortedData.sort((row: string, row2: string) => {
+    //   return (
+    //     Number.parseInt(row2[row2.length - 1]) -
+    //     Number.parseInt(row[row.length - 1])
+    //   );
+    // });
+    setCovidDataDeaths(deathsData);
+    setCovidDataRecovered(recoveredData);
+    setCovidDataInfected(infectedData);
   };
 
   useEffect(() => {
@@ -33,10 +48,13 @@ const App = () => {
         <ul className={`flex py-4 px-4`}>
           <li className="flex-1 font-bold">Region</li>
           <li className="flex-1 font-bold">Total Infected</li>
-          <li className="flex-1 font-bold">Change Past Week</li>
+          <li className="flex-1 font-bold">Total Deaths</li>
+          <li className="flex-1 font-bold">Total Recovered</li>
+          <li className="flex-1 font-bold">Infections Past Week</li>
         </ul>
-        {covidData
-          .map((row: string[]) => {
+        {covidDataInfected
+          .slice(1)
+          .map((row: string[], index: number) => {
             const newRow: Array<string | number> = [];
             if (row[0] === row[1] || !row[0]) {
               newRow.push(row[1]);
@@ -46,6 +64,17 @@ const App = () => {
             }
             const latest = Number.parseInt(row[row.length - 1]);
             newRow.push(latest);
+
+            const totalDeaths =
+              covidDataDeaths[index + 1][covidDataDeaths[index + 1].length - 1];
+            newRow.push(totalDeaths);
+
+            const totalRecovered =
+              covidDataRecovered[index + 1][
+                covidDataRecovered[index + 1].length - 1
+              ];
+            newRow.push(totalRecovered);
+
             const threeDaysAgo = Number.parseInt(row[row.length - 8]);
             console.log(newRow[0], latest, threeDaysAgo);
             const difference = latest - threeDaysAgo;
