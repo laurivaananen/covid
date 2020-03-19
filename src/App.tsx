@@ -46,18 +46,20 @@ const App = () => {
     <div className="text-gray-800 sm:text-base text-sm leading-5 antialiased">
       <ul>
         <ul className={`flex py-4 w-full`}>
-          <li className="font-bold w-1/6 mx-2 sm:mx-4">Region</li>
+          <li className="font-bold w-3/12 mx-2 sm:mx-4">Region</li>
           {/* <li className="font-bold">Total Infected</li>
           <li className="font-bold">Total Deaths</li>
           <li className="font-bold">Total Recovered</li> */}
-          <li className="font-bold w-4/6 mx-2 sm:mx-4">
+          <li className="font-bold w-6/12 mx-2 sm:mx-4">
             <span className="text-red-400">Deaths</span>
             <span className="font-normal text-gray-500 sm:px-4"> / </span>
             <span className="text-yellow-400">Infections</span>
             <span className="font-normal text-gray-500 sm:px-4"> / </span>
             <span className="text-green-400">Recoveries</span>
           </li>
-          <li className="font-bold w-1/6 mx-2 sm:mx-4">Infections Past Week</li>
+          <li className="font-bold w-3/12 mx-2 sm:mx-4">
+            Infections Past Week
+          </li>
         </ul>
         {covidDataInfected
           .slice(1)
@@ -70,7 +72,7 @@ const App = () => {
               newRow.push(region);
             }
             const totalInfections = Number.parseInt(row[row.length - 1]);
-            // newRow.push(totalInfections);
+            newRow.push(totalInfections);
 
             const totalDeaths = Number.parseInt(
               covidDataDeaths[index + 1][covidDataDeaths[index + 1].length - 1]
@@ -93,7 +95,6 @@ const App = () => {
             newRow.push(recoveredPercent);
 
             const threeDaysAgo = Number.parseInt(row[row.length - 8]);
-            console.log(newRow[0], totalInfections, threeDaysAgo);
             const difference = totalInfections - threeDaysAgo;
             const percentage = (difference / threeDaysAgo) * 100;
             newRow.push(percentage.toFixed(1));
@@ -110,16 +111,20 @@ const App = () => {
                 {row.map((value: string | number, index: number, orig) => {
                   if (index === orig.length - 4) {
                     return (
-                      <li className="w-4/6 mx-2 sm:mx-4">
+                      <li className="w-6/12 mx-2 sm:mx-4">
                         <div className="bg-gray-100 h-full flex">
                           <div
                             className="bg-red-400 h-full"
                             style={{ width: `${row[index + 1]}%` }}
                           ></div>
                           <div
-                            className="bg-yellow-400 h-full"
+                            className="bg-yellow-400 h-full flex"
                             style={{ width: `${row[index]}%` }}
-                          ></div>
+                          >
+                            <span className="mx-auto text-yellow-600 font-bold">
+                              {row[index - 1]}
+                            </span>
+                          </div>
                           <div
                             className="bg-green-400 h-full"
                             style={{ width: `${row[index + 2]}%` }}
@@ -131,26 +136,24 @@ const App = () => {
                   if (index === orig.length - 1) {
                     if (Math.sign(value as number) > 0) {
                       return (
-                        <li className="text-red-500 font-bold w-1/6">
+                        <li className="text-red-500 font-bold w-3/12">
                           +{value}%
                         </li>
                       );
                     } else if (Math.sign(value as number) < 0) {
                       return (
-                        <li className="text-green-400 font-bold w-1/6">
+                        <li className="text-green-400 font-bold w-3/12">
                           {value}%
                         </li>
                       );
                     } else {
                       return (
-                        <li className="text-yellow-500 font-bold w-1/6">
-                          +{value}%
-                        </li>
+                        <li className="text-yellow-500 font-bold w-3/12"></li>
                       );
                     }
                   }
                   if (index === 0) {
-                    return <li className="mx-2 sm:mx-4 w-1/6">{value}</li>;
+                    return <li className="mx-2 sm:mx-4 w-3/12">{value}</li>;
                   }
                 })}
               </ul>
