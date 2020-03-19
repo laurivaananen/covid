@@ -60,13 +60,13 @@ const App = () => {
             </li>
             <li className="font-bold mx-2 sm:mx-4 sm:w-10/12 w-8/12 flex">
               <span className="text-red-600 bg-red-400 text-5xl inline-block text-center flex-1 py-4">
-                ✝
+                <i className="fas fa-cross"></i>
               </span>
               <span className="text-yellow-600 bg-yellow-400 text-5xl flex-1 inline-block text-center py-4">
-                ☣️
+                <i className="fas fa-heartbeat"></i>
               </span>
               <span className="text-green-600 bg-green-400 text-5xl flex-1 text-center py-4">
-                👍
+                <i className="fas fa-heart"></i>
               </span>
             </li>
           </ul>
