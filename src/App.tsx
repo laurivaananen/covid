@@ -17,9 +17,17 @@ export interface ICountry {
   lastupdate: Date;
   location: ILocation;
   countrycode: ICountrycode;
-  confirmed: number;
-  deaths: number;
+  timeseries: ITimeseries;
+}
+
+export interface IDailyStatistic {
+  confirmed?: number;
+  deaths?: number;
   recovered: number;
+}
+
+export interface ITimeseries {
+  [key: string]: IDailyStatistic;
 }
 
 export interface IInfectionStateRatioPercentages {
@@ -28,20 +36,49 @@ export interface IInfectionStateRatioPercentages {
   recovered: number;
 }
 
+export interface ILatestData {
+  deaths: number;
+  confirmed: number;
+  recovered: number;
+}
+
 export interface ICountryStats extends ICountry {
   infectionStateRatioPercentages: IInfectionStateRatioPercentages;
+  latestData: ILatestData;
+  infectionRatePercentagePastWeek: number;
 }
+
+const countryLatestData = (country: ICountry): IDailyStatistic => {
+  const latest = Object.values(country.timeseries)[
+    Object.keys(country.timeseries).length - 1
+  ];
+  if (!latest) {
+    return { confirmed: 0, deaths: 0, recovered: 0 };
+  }
+  return latest;
+};
+
+const countryPastWeek = (country: ICountry): IDailyStatistic => {
+  const latest = Object.values(country.timeseries)[
+    Object.keys(country.timeseries).length - 8
+  ];
+  if (!latest) {
+    return { confirmed: 0, deaths: 0, recovered: 0 };
+  }
+  return latest;
+};
 
 const App = () => {
   const [globalData, setGlobalData] = useState([] as ICountry[]);
 
   const FetchData = async () => {
     const globalData = await axios(
-      "https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest"
+      "https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/timeseries"
     );
     globalData.data.sort(
       (country: ICountry, country2: ICountry) =>
-        country2.confirmed - country.confirmed
+        (countryLatestData(country2).confirmed || 0) -
+        (countryLatestData(country).confirmed || 0)
     );
     setGlobalData(globalData.data);
   };
@@ -73,18 +110,40 @@ const App = () => {
         </li>
         {globalData
           .map((country: ICountry) => {
-            const totalCases =
-              country.confirmed + country.deaths + country.recovered;
+            const latestDeaths = countryLatestData(country).deaths || 0;
+            const latestRecovered = countryLatestData(country).recovered || 0;
+            const latestConfirmed = countryLatestData(country).confirmed || 0;
+            const totalCases = latestConfirmed + latestDeaths + latestRecovered;
+
+            const pastWeekConfirmed = countryPastWeek(country).confirmed || 0;
+            console.log(pastWeekConfirmed);
+            console.log(latestConfirmed);
+            console.log(country.countryregion);
+            console.log("\n");
+            const infectionRatePercentagePastWeek =
+              ((latestConfirmed - pastWeekConfirmed) / pastWeekConfirmed) * 100;
 
             const infectionStateRatioPercentages: IInfectionStateRatioPercentages = {
-              deaths: (country.deaths / totalCases) * 100,
-              confirmed: (country.confirmed / totalCases) * 100,
-              recovered: (country.recovered / totalCases) * 100
+              deaths: (latestDeaths / totalCases) * 100,
+              confirmed: (latestConfirmed / totalCases) * 100,
+              recovered: (latestRecovered / totalCases) * 100
             };
 
-            return Object.assign({}, country, {
-              infectionStateRatioPercentages
-            });
+            return Object.assign(
+              {},
+              country,
+              {
+                infectionStateRatioPercentages
+              },
+              {
+                latestData: {
+                  deaths: latestDeaths,
+                  confirmed: latestConfirmed,
+                  recovered: latestRecovered
+                }
+              },
+              { infectionRatePercentagePastWeek }
+            );
           })
           .map((country: ICountryStats, index: number) => {
             return (
@@ -95,8 +154,24 @@ const App = () => {
                   } w-full`}
                 >
                   <li className="mx-2 sm:mx-4 sm:w-2/12 w-4/12">
-                    {country.countryregion}
+                    {buildRegionName(
+                      country.countryregion,
+                      country.provincestate
+                    )}
+                    {country.infectionRatePercentagePastWeek > 100 && (
+                      <i className="fas fa-angle-double-up text-red-400 ml-2"></i>
+                    )}
+                    {country.infectionRatePercentagePastWeek < 100 &&
+                      country.infectionRatePercentagePastWeek > 0 && (
+                        <i className="fas fa-angle-up text-orange-400 ml-2"></i>
+                      )}
+                    {country.infectionRatePercentagePastWeek < 0 && (
+                      <i className="fas fa-angle-down text-green-400 ml-2"></i>
+                    )}
                   </li>
+                  {/* <li className="mx-2 sm:mx-4 sm:w-2/12 w-4/12">
+                    {country.infectionRatePercentagePastWeek}
+                  </li> */}
                   <li className="mx-2 sm:mx-4 sm:w-10/12 w-8/12">
                     <div className="bg-gray-200 h-full flex">
                       <div
@@ -107,7 +182,7 @@ const App = () => {
                       >
                         <span className="m-auto text-red-600 font-bold overflow-x-hidden">
                           {country.infectionStateRatioPercentages.deaths > 10 &&
-                            country.deaths}
+                            country.latestData.deaths}
                         </span>
                       </div>
                       <div
@@ -118,7 +193,7 @@ const App = () => {
                       >
                         <span className="m-auto text-yellow-600 font-bold overflow-x-hidden">
                           {country.infectionStateRatioPercentages.confirmed >
-                            10 && country.confirmed}
+                            10 && country.latestData.confirmed}
                         </span>
                       </div>
                       <div
@@ -129,7 +204,7 @@ const App = () => {
                       >
                         <span className="m-auto text-green-600 font-bold overflow-x-hidden">
                           {country.infectionStateRatioPercentages.recovered >
-                            10 && country.recovered}
+                            10 && country.latestData.recovered}
                         </span>
                       </div>
                     </div>
@@ -141,6 +216,13 @@ const App = () => {
       </ul>
     </div>
   );
+};
+
+const buildRegionName = (country: string, state: string): string => {
+  if (state !== "" && state !== country) {
+    return `${country}, ${state}`;
+  }
+  return country;
 };
 
 export default App;
