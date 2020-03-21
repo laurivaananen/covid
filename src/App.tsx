@@ -109,14 +109,14 @@ const App = () => {
   }, []);
 
   return (
-    <div className="text-gray-800 sm:text-base text-sm leading-5 antialiased">
+    <div className="text-gray-800 sm:text-base text-sm antialiased">
       <ul>
         <li>
           <ul className="flex">
-            <li className="font-bold mx-2 sm:mx-4 sm:w-2/12 w-4/12 text-xl py-4">
+            <li className="font-bold mx-1 sm:mx-2 sm:mx-4 sm:w-2/12 w-5/12 text-xl py-4">
               Region
             </li>
-            <li className="font-bold mx-2 sm:mx-4 sm:w-10/12 w-8/12 flex">
+            <li className="font-bold mx-1 sm:mx-2 sm:w-10/12 w-7/12 flex">
               <span className="text-red-600 bg-red-400 text-5xl inline-block text-center flex-1 py-4">
                 <i className="fas fa-cross"></i>
               </span>
@@ -195,27 +195,27 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
       className={`${!(index % 2) ? "bg-gray-100" : ""} cursor-pointer`}
     >
       <div className={`flex py-2 w-full`}>
-        <div className="px-1 sm:px-4 sm:w-2/12 w-4/12 font-bold">
+        <div className="px-1 sm:px-4 sm:w-2/12 w-5/12 font-bold">
           <i
             className={`fas ${
               country.isOpen
                 ? "fa-chevron-circle-down"
                 : "fa-chevron-circle-right"
-            } text-gray-400 mr-2`}
+            } text-gray-400 sm:mr-2 mr-1`}
           ></i>
           {buildRegionName(country.countryregion, country.provincestate)}
           {country.infectionRatePercentagePastWeek > 100 && (
-            <i className="fas fa-angle-double-up text-red-300 ml-2"></i>
+            <i className="fas fa-angle-double-up text-red-300 sm:ml-2 ml-1"></i>
           )}
           {country.infectionRatePercentagePastWeek < 100 &&
             country.infectionRatePercentagePastWeek > 0 && (
-              <i className="fas fa-angle-up text-orange-300 ml-2"></i>
+              <i className="fas fa-angle-up text-orange-300 sm:ml-2 ml-1"></i>
             )}
           {country.infectionRatePercentagePastWeek < 0 && (
-            <i className="fas fa-angle-down text-green-300 ml-2"></i>
+            <i className="fas fa-angle-down text-green-300 sm:ml-2 ml-1"></i>
           )}
         </div>
-        <div className="px-1 sm:px-4 sm:w-10/12 w-8/12">
+        <div className="px-1 sm:px-4 sm:w-10/12 w-7/12">
           <div className="bg-gray-200 h-full flex">
             <div
               className="bg-red-400 h-full flex"
