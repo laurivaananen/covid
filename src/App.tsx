@@ -43,10 +43,16 @@ export interface ILatestData {
   recovered: number;
 }
 
+export interface IPastWeekChanges {
+  confirmed: number;
+  recovered: number;
+  deaths: number;
+}
+
 export interface ICountryStats extends ICountry {
   infectionStateRatioPercentages: IInfectionStateRatioPercentages;
   latestData: ILatestData;
-  infectionRatePercentagePastWeek: number;
+  pastWeekChanges: IPastWeekChanges;
 }
 
 const countryLatestData = (country: ICountry): IDailyStatistic => {
@@ -137,8 +143,16 @@ const App = () => {
             const totalCases = latestConfirmed + latestDeaths + latestRecovered;
 
             const pastWeekConfirmed = countryPastWeek(country).confirmed || 0;
-            const infectionRatePercentagePastWeek =
+            const confirmedRatePercentagePastWeek =
               ((latestConfirmed - pastWeekConfirmed) / pastWeekConfirmed) * 100;
+
+            const pastWeekDeaths = countryPastWeek(country).deaths || 0;
+            const deathRatePercentagePastWeek =
+              ((latestDeaths - pastWeekDeaths) / pastWeekDeaths) * 100;
+
+            const pastWeekRecovered = countryPastWeek(country).deaths || 0;
+            const recoveredRatePercentagePastWeek =
+              ((latestRecovered - pastWeekRecovered) / pastWeekRecovered) * 100;
 
             const infectionStateRatioPercentages: IInfectionStateRatioPercentages = {
               deaths: (latestDeaths / totalCases) * 100,
@@ -159,7 +173,13 @@ const App = () => {
                   recovered: latestRecovered
                 }
               },
-              { infectionRatePercentagePastWeek }
+              {
+                pastWeekChanges: {
+                  deaths: deathRatePercentagePastWeek,
+                  recovered: recoveredRatePercentagePastWeek,
+                  confirmed: confirmedRatePercentagePastWeek
+                }
+              }
             );
           })
           .map((country: ICountryStats, index: number) => {
@@ -195,7 +215,7 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
       className={`${!(index % 2) ? "bg-gray-100" : ""} cursor-pointer`}
     >
       <div className={`flex py-2 w-full`}>
-        <div className="px-1 sm:px-4 sm:w-2/12 w-5/12 font-bold">
+        <div className="px-1 sm:px-4 md:w-2/12 w-5/12 font-bold">
           <i
             className={`fas ${
               country.isOpen
@@ -204,18 +224,18 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
             } text-gray-400 sm:mr-2 mr-1`}
           ></i>
           {buildRegionName(country.countryregion, country.provincestate)}
-          {country.infectionRatePercentagePastWeek > 100 && (
+          {country.infectionStateRatioPercentages.confirmed > 100 && (
             <i className="fas fa-angle-double-up text-red-300 sm:ml-2 ml-1"></i>
           )}
-          {country.infectionRatePercentagePastWeek < 100 &&
-            country.infectionRatePercentagePastWeek > 0 && (
+          {country.infectionStateRatioPercentages.confirmed < 100 &&
+            country.infectionStateRatioPercentages.confirmed > 0 && (
               <i className="fas fa-angle-up text-orange-300 sm:ml-2 ml-1"></i>
             )}
-          {country.infectionRatePercentagePastWeek < 0 && (
+          {country.infectionStateRatioPercentages.confirmed < 0 && (
             <i className="fas fa-angle-down text-green-300 sm:ml-2 ml-1"></i>
           )}
         </div>
-        <div className="px-1 sm:px-4 sm:w-10/12 w-7/12">
+        <div className="px-1 sm:px-4 md:w-10/12 w-7/12">
           <div className="bg-gray-200 h-full flex">
             <div
               className="bg-red-400 h-full flex"
@@ -256,31 +276,40 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
       <div
         className={`${
           country.isOpen ? "visible" : "hidden"
-        } w-full flex px-1 sm:px-4 py-2`}
+        } w-full flex flex-col px-1 sm:px-4 py-2`}
       >
-        <span>
-          Infection Rate Past Week: {buildInfectionRatePercentage(country)}
-        </span>
+        <div>
+          Infection Rate Past Week:{" "}
+          {buildInfectionRatePercentage(country.pastWeekChanges.confirmed)}
+        </div>
+        <div>
+          Death Rate Past Week:{" "}
+          {buildInfectionRatePercentage(country.pastWeekChanges.deaths)}
+        </div>
+        <div>
+          Recovery Rate Past Week:{" "}
+          <span className={`text-green-400 font-bold`}>
+            +{country.pastWeekChanges.recovered.toFixed(2)}%
+          </span>
+        </div>
       </div>
     </li>
   );
 };
 
-const buildInfectionRatePercentage = (country: ICountryStats) => {
-  const countryInfectionRate = country.infectionRatePercentagePastWeek.toFixed(
-    2
-  );
-  if (country.infectionRatePercentagePastWeek > 100) {
+const buildInfectionRatePercentage = (rate: number) => {
+  const countryInfectionRate = rate.toFixed(2);
+  if (rate > 100) {
     return (
       <span className={`text-red-400 font-bold`}>+{countryInfectionRate}%</span>
     );
-  } else if (country.infectionRatePercentagePastWeek > 0) {
+  } else if (rate > 0) {
     return (
       <span className={`text-orange-400 font-bold`}>
         +{countryInfectionRate}%
       </span>
     );
-  } else if (country.infectionRatePercentagePastWeek === 0) {
+  } else if (rate === 0) {
     return (
       <span className={`text-yellow-400 font-bold`}>
         {countryInfectionRate}%
