@@ -18,6 +18,7 @@ export interface ICountry {
   location: ILocation;
   countrycode: ICountrycode;
   timeseries: ITimeseries;
+  isOpen: boolean;
 }
 
 export interface IDailyStatistic {
@@ -80,7 +81,27 @@ const App = () => {
         (countryLatestData(country2).confirmed || 0) -
         (countryLatestData(country).confirmed || 0)
     );
-    setGlobalData(globalData.data);
+    setGlobalData(
+      globalData.data.map((country: ICountry) =>
+        Object.assign({}, country, { isOpen: false })
+      )
+    );
+  };
+
+  const toggleCountry = (country: ICountry) => {
+    setGlobalData(
+      globalData.map(countryData => {
+        if (
+          buildRegionName(
+            countryData.countryregion,
+            countryData.provincestate
+          ) === buildRegionName(country.countryregion, country.provincestate)
+        ) {
+          return { ...countryData, isOpen: !countryData.isOpen };
+        }
+        return countryData;
+      })
+    );
   };
 
   useEffect(() => {
@@ -116,10 +137,6 @@ const App = () => {
             const totalCases = latestConfirmed + latestDeaths + latestRecovered;
 
             const pastWeekConfirmed = countryPastWeek(country).confirmed || 0;
-            console.log(pastWeekConfirmed);
-            console.log(latestConfirmed);
-            console.log(country.countryregion);
-            console.log("\n");
             const infectionRatePercentagePastWeek =
               ((latestConfirmed - pastWeekConfirmed) / pastWeekConfirmed) * 100;
 
@@ -147,75 +164,135 @@ const App = () => {
           })
           .map((country: ICountryStats, index: number) => {
             return (
-              <li>
-                <ul
-                  className={`flex py-2 ${
-                    !(index % 2) ? "bg-gray-100" : ""
-                  } w-full`}
-                >
-                  <li className="mx-2 sm:mx-4 sm:w-2/12 w-4/12">
-                    {buildRegionName(
-                      country.countryregion,
-                      country.provincestate
-                    )}
-                    {country.infectionRatePercentagePastWeek > 100 && (
-                      <i className="fas fa-angle-double-up text-red-400 ml-2"></i>
-                    )}
-                    {country.infectionRatePercentagePastWeek < 100 &&
-                      country.infectionRatePercentagePastWeek > 0 && (
-                        <i className="fas fa-angle-up text-orange-400 ml-2"></i>
-                      )}
-                    {country.infectionRatePercentagePastWeek < 0 && (
-                      <i className="fas fa-angle-down text-green-400 ml-2"></i>
-                    )}
-                  </li>
-                  {/* <li className="mx-2 sm:mx-4 sm:w-2/12 w-4/12">
-                    {country.infectionRatePercentagePastWeek}
-                  </li> */}
-                  <li className="mx-2 sm:mx-4 sm:w-10/12 w-8/12">
-                    <div className="bg-gray-200 h-full flex">
-                      <div
-                        className="bg-red-400 h-full flex"
-                        style={{
-                          width: `${country.infectionStateRatioPercentages.deaths}%`
-                        }}
-                      >
-                        <span className="m-auto text-red-600 font-bold overflow-x-hidden">
-                          {country.infectionStateRatioPercentages.deaths > 10 &&
-                            country.latestData.deaths}
-                        </span>
-                      </div>
-                      <div
-                        className="bg-yellow-400 h-full flex"
-                        style={{
-                          width: `${country.infectionStateRatioPercentages.confirmed}%`
-                        }}
-                      >
-                        <span className="m-auto text-yellow-600 font-bold overflow-x-hidden">
-                          {country.infectionStateRatioPercentages.confirmed >
-                            10 && country.latestData.confirmed}
-                        </span>
-                      </div>
-                      <div
-                        className="bg-green-400 h-full flex"
-                        style={{
-                          width: `${country.infectionStateRatioPercentages.recovered}%`
-                        }}
-                      >
-                        <span className="m-auto text-green-600 font-bold overflow-x-hidden">
-                          {country.infectionStateRatioPercentages.recovered >
-                            10 && country.latestData.recovered}
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </li>
+              <CountryItem
+                key={`${country.countryregion}${country.provincestate}`}
+                country={country}
+                index={index}
+                toggleCountry={toggleCountry}
+              />
             );
+            // return countryItem(country, index);
           })}
       </ul>
     </div>
   );
+};
+
+interface ICountryItemProps {
+  country: ICountryStats;
+  index: number;
+  toggleCountry: (country: ICountry) => void;
+}
+
+const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
+  country,
+  index,
+  toggleCountry
+}) => {
+  return (
+    <li
+      onClick={() => toggleCountry(country)}
+      className={`${!(index % 2) ? "bg-gray-100" : ""} cursor-pointer`}
+    >
+      <div className={`flex py-2 w-full`}>
+        <div className="px-1 sm:px-4 sm:w-2/12 w-4/12 font-bold">
+          <i
+            className={`fas ${
+              country.isOpen
+                ? "fa-chevron-circle-down"
+                : "fa-chevron-circle-right"
+            } text-gray-400 mr-2`}
+          ></i>
+          {buildRegionName(country.countryregion, country.provincestate)}
+          {country.infectionRatePercentagePastWeek > 100 && (
+            <i className="fas fa-angle-double-up text-red-300 ml-2"></i>
+          )}
+          {country.infectionRatePercentagePastWeek < 100 &&
+            country.infectionRatePercentagePastWeek > 0 && (
+              <i className="fas fa-angle-up text-orange-300 ml-2"></i>
+            )}
+          {country.infectionRatePercentagePastWeek < 0 && (
+            <i className="fas fa-angle-down text-green-300 ml-2"></i>
+          )}
+        </div>
+        <div className="px-1 sm:px-4 sm:w-10/12 w-8/12">
+          <div className="bg-gray-200 h-full flex">
+            <div
+              className="bg-red-400 h-full flex"
+              style={{
+                width: `${country.infectionStateRatioPercentages.deaths}%`
+              }}
+            >
+              <span className="m-auto text-red-600 font-bold overflow-x-hidden">
+                {country.infectionStateRatioPercentages.deaths > 10 &&
+                  country.latestData.deaths}
+              </span>
+            </div>
+            <div
+              className="bg-yellow-400 h-full flex"
+              style={{
+                width: `${country.infectionStateRatioPercentages.confirmed}%`
+              }}
+            >
+              <span className="m-auto text-yellow-600 font-bold overflow-x-hidden">
+                {country.infectionStateRatioPercentages.confirmed > 10 &&
+                  country.latestData.confirmed}
+              </span>
+            </div>
+            <div
+              className="bg-green-400 h-full flex"
+              style={{
+                width: `${country.infectionStateRatioPercentages.recovered}%`
+              }}
+            >
+              <span className="m-auto text-green-600 font-bold overflow-x-hidden">
+                {country.infectionStateRatioPercentages.recovered > 10 &&
+                  country.latestData.recovered}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className={`${
+          country.isOpen ? "visible" : "hidden"
+        } w-full flex px-1 sm:px-4 py-2`}
+      >
+        <span>
+          Infection Rate Past Week: {buildInfectionRatePercentage(country)}
+        </span>
+      </div>
+    </li>
+  );
+};
+
+const buildInfectionRatePercentage = (country: ICountryStats) => {
+  const countryInfectionRate = country.infectionRatePercentagePastWeek.toFixed(
+    2
+  );
+  if (country.infectionRatePercentagePastWeek > 100) {
+    return (
+      <span className={`text-red-400 font-bold`}>+{countryInfectionRate}%</span>
+    );
+  } else if (country.infectionRatePercentagePastWeek > 0) {
+    return (
+      <span className={`text-orange-400 font-bold`}>
+        +{countryInfectionRate}%
+      </span>
+    );
+  } else if (country.infectionRatePercentagePastWeek === 0) {
+    return (
+      <span className={`text-yellow-400 font-bold`}>
+        {countryInfectionRate}%
+      </span>
+    );
+  } else {
+    return (
+      <span className={`text-green-400 font-bold`}>
+        -{countryInfectionRate}%
+      </span>
+    );
+  }
 };
 
 const buildRegionName = (country: string, state: string): string => {
