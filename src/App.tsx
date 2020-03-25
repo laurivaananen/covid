@@ -18,7 +18,10 @@ export interface ICaseStatistics {
 const calculatePastWeekChange = (countryRow: string[]) => {
   const latest = Number.parseInt(countryRow[countryRow.length - 1]);
   const pastWeek = Number.parseInt(countryRow[countryRow.length - 8]);
-  const percentageChangePastWeek = ((latest - pastWeek) / pastWeek) * 100;
+  if (pastWeek === 0) {
+    return 0;
+  }
+  const percentageChangePastWeek = ((latest - pastWeek) / pastWeek) * 100 || 0;
   return percentageChangePastWeek;
 };
 
@@ -32,32 +35,44 @@ const App = () => {
     const deathsTimeSeries = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
     );
-    const parsedConfirmedData = parse(confirmedTimeSeries.data);
-    const parsedDeathsData = parse(deathsTimeSeries.data);
+    const parsedConfirmedData: string[][] = parse(confirmedTimeSeries.data);
+    const parsedDeathsData: string[][] = parse(deathsTimeSeries.data);
     const cleanedData: ICountry[] = parsedConfirmedData
       .slice(1)
-      .map((countryRow: string[], index: number) => {
+      .map((confirmedCountryRow: string[], index: number) => {
+        const countryRegion = buildRegionName(
+          confirmedCountryRow[1],
+          confirmedCountryRow[0]
+        );
+        const deathCountryRow = parsedDeathsData.find(
+          (deathCountryRow: string[]) =>
+            countryRegion ===
+            buildRegionName(deathCountryRow[1], deathCountryRow[0])
+        );
         const totalConfirmed = Number.parseInt(
-          countryRow[countryRow.length - 1]
+          confirmedCountryRow[confirmedCountryRow.length - 1]
         );
-        const totalDeaths = Number.parseInt(
-          parsedDeathsData[index + 1][countryRow.length - 1]
-        );
+        console.log(confirmedCountryRow);
+        const totalDeaths = deathCountryRow
+          ? Number.parseInt(deathCountryRow[deathCountryRow.length - 1])
+          : 0;
         const totalCases = totalConfirmed + totalDeaths;
         const countryData: ICountry = {
-          region: buildRegionName(countryRow[1], countryRow[0]),
+          region: countryRegion,
           isOpen: false,
           total: {
             confirmed: totalConfirmed,
             deaths: totalDeaths
           },
           changePastWeek: {
-            confirmed: calculatePastWeekChange(countryRow),
-            deaths: calculatePastWeekChange(parsedDeathsData[index + 1])
+            confirmed: calculatePastWeekChange(confirmedCountryRow),
+            deaths: deathCountryRow
+              ? calculatePastWeekChange(deathCountryRow)
+              : 0
           },
           caseShare: {
-            confirmed: (totalConfirmed / totalCases) * 100,
-            deaths: (totalDeaths / totalCases) * 100
+            confirmed: (totalConfirmed / totalCases) * 100 || 0,
+            deaths: (totalDeaths / totalCases) * 100 || 0
           }
         };
         return countryData;
@@ -66,7 +81,7 @@ const App = () => {
         (country1: ICountry, country2: ICountry) =>
           country2.total.confirmed - country1.total.confirmed
       )
-      .map((country: ICountry[], index: number) => {
+      .map((country: ICountry, index: number) => {
         return Object.assign({}, country, {
           isOpen: index === 0 ? true : false
         });
@@ -109,6 +124,40 @@ const App = () => {
             </div>
           </div>
         </li>
+        <CountryItem
+          key="global"
+          country={globalData.reduce(
+            (totalCountry: ICountry, country: ICountry) => {
+              totalCountry.caseShare.confirmed += country.caseShare.confirmed;
+              totalCountry.caseShare.deaths += country.caseShare.deaths;
+              totalCountry.total.confirmed += country.total.confirmed;
+              totalCountry.total.deaths += country.total.deaths;
+              totalCountry.changePastWeek.confirmed +=
+                country.changePastWeek.confirmed;
+              totalCountry.changePastWeek.deaths +=
+                country.changePastWeek.deaths;
+              return totalCountry;
+            },
+            {
+              region: "Total",
+              caseShare: {
+                confirmed: 0,
+                deaths: 0
+              },
+              total: {
+                confirmed: 0,
+                deaths: 0
+              },
+              changePastWeek: {
+                confirmed: 0,
+                deaths: 0
+              },
+              isOpen: true
+            }
+          )}
+          index={0}
+          toggleCountry={toggleCountry}
+        />
         {globalData.map((country: ICountry, index: number) => {
           return (
             <CountryItem
@@ -136,7 +185,7 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
   toggleCountry
 }) => {
   return (
-    <li className={`${!(index % 2) ? "bg-gray-100" : ""}`}>
+    <li className={`${!(index % 1) ? "bg-gray-100" : ""}`}>
       <div className={`flex py-2 w-full`}>
         <div
           onClick={() => toggleCountry(country)}
