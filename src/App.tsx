@@ -7,6 +7,7 @@ export interface ICountry {
   isOpen: boolean;
   total: ICaseStatistics;
   changePastWeek: ICaseStatistics;
+  caseShare: ICaseStatistics;
 }
 
 export interface ICaseStatistics {
@@ -36,16 +37,27 @@ const App = () => {
     const cleanedData: ICountry[] = parsedConfirmedData
       .slice(1)
       .map((countryRow: string[], index: number) => {
+        const totalConfirmed = Number.parseInt(
+          countryRow[countryRow.length - 1]
+        );
+        const totalDeaths = Number.parseInt(
+          parsedDeathsData[index + 1][countryRow.length - 1]
+        );
+        const totalCases = totalConfirmed + totalDeaths;
         const countryData: ICountry = {
           region: buildRegionName(countryRow[1], countryRow[0]),
           isOpen: false,
           total: {
-            confirmed: Number.parseInt(countryRow[countryRow.length - 1]),
-            deaths: Number.parseInt(parsedDeathsData[countryRow.length - 1])
+            confirmed: totalConfirmed,
+            deaths: totalDeaths
           },
           changePastWeek: {
             confirmed: calculatePastWeekChange(countryRow),
             deaths: calculatePastWeekChange(parsedDeathsData[index + 1])
+          },
+          caseShare: {
+            confirmed: (totalConfirmed / totalCases) * 100,
+            deaths: (totalDeaths / totalCases) * 100
           }
         };
         return countryData;
@@ -59,7 +71,6 @@ const App = () => {
           isOpen: index === 0 ? true : false
         });
       });
-    console.log(cleanedData);
     setGlobalData(cleanedData);
   };
 
@@ -83,10 +94,14 @@ const App = () => {
       <ul>
         <li>
           <div className="flex items-center">
-            <div className="font-bold mx-1 sm:mx-2 sm:mx-4 sm:w-2/12 w-5/12 text-xl text-center">
+            <div className="font-bold mx-1 sm:mx-2 sm:w-2/12 w-5/12 text-xl text-center">
               Region
             </div>
-            <div className="font-bold mx-1 sm:mx-2 sm:w-10/12 w-7/12 flex">
+            <div className="mx-1 sm:mx-2 sm:w-10/12 w-7/12 flex">
+              <span className="text-red-600 bg-red-400 text-5xl flex-1 text-center">
+                <i className="fas fa-cross"></i>
+                <span className="text-sm block">Deaths</span>
+              </span>
               <span className="text-yellow-600 bg-yellow-400 text-5xl flex-1 text-center">
                 <i className="fas fa-biohazard"></i>
                 <span className="text-sm block">Confirmed</span>
@@ -149,13 +164,23 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
         <div className="px-1 sm:px-4 md:w-10/12 w-7/12">
           <div className="bg-gray-200 h-full flex">
             <div
+              className="bg-red-400 h-full flex"
+              style={{
+                width: `${country.caseShare.deaths}%`
+              }}
+            >
+              <span className="m-auto text-red-600 font-bold overflow-x-hidden">
+                {country.caseShare.deaths > 5 ? country.total.deaths : ""}
+              </span>
+            </div>
+            <div
               className="bg-yellow-400 h-full flex"
               style={{
-                width: `100%`
+                width: `${country.caseShare.confirmed}%`
               }}
             >
               <span className="m-auto text-yellow-600 font-bold overflow-x-hidden">
-                {country.total.confirmed}
+                {country.caseShare.confirmed > 5 ? country.total.confirmed : ""}
               </span>
             </div>
           </div>
@@ -180,18 +205,18 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
 };
 
 const buildInfectionRatePercentage = (rate: number) => {
-  const countryInfectionRate = rate.toFixed(2);
-  if (rate > 100) {
+  const countryInfectionRate = Math.round(rate);
+  if (countryInfectionRate > 100) {
     return (
       <span className={`text-red-400 font-bold`}>+{countryInfectionRate}%</span>
     );
-  } else if (rate > 0) {
+  } else if (countryInfectionRate > 0) {
     return (
       <span className={`text-orange-400 font-bold`}>
         +{countryInfectionRate}%
       </span>
     );
-  } else if (rate === 0) {
+  } else if (countryInfectionRate === 0) {
     return (
       <span className={`text-yellow-400 font-bold`}>
         {countryInfectionRate}%
