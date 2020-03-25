@@ -59,6 +59,7 @@ const countryLatestData = (country: ICountry): IDailyStatistic => {
   const latest = Object.values(country.timeseries)[
     Object.keys(country.timeseries).length - 1
   ];
+  console.log(latest.recovered);
   if (!latest) {
     return { confirmed: 0, deaths: 0, recovered: 0 };
   }
@@ -80,16 +81,17 @@ const App = () => {
 
   const FetchData = async () => {
     const globalData = await axios(
-      "https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/timeseries"
+      "https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest?onlyCountries=true"
     );
     globalData.data.sort(
       (country: ICountry, country2: ICountry) =>
         (countryLatestData(country2).confirmed || 0) -
         (countryLatestData(country).confirmed || 0)
     );
+
     setGlobalData(
-      globalData.data.map((country: ICountry) =>
-        Object.assign({}, country, { isOpen: false })
+      globalData.data.map((country: ICountry, index: number) =>
+        Object.assign({}, country, { isOpen: index === 0 ? true : false })
       )
     );
   };
@@ -160,7 +162,7 @@ const App = () => {
               recovered: (latestRecovered / totalCases) * 100
             };
 
-            return Object.assign(
+            const aa: ICountryStats = Object.assign(
               {},
               country,
               {
@@ -181,6 +183,7 @@ const App = () => {
                 }
               }
             );
+            return aa;
           })
           .map((country: ICountryStats, index: number) => {
             return (
@@ -191,7 +194,6 @@ const App = () => {
                 toggleCountry={toggleCountry}
               />
             );
-            // return countryItem(country, index);
           })}
       </ul>
     </div>
@@ -224,14 +226,14 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
             } text-gray-400 sm:mr-2 mr-1`}
           ></i>
           {buildRegionName(country.countryregion, country.provincestate)}
-          {country.infectionStateRatioPercentages.confirmed > 100 && (
+          {country.pastWeekChanges.confirmed > 100 && (
             <i className="fas fa-angle-double-up text-red-300 sm:ml-2 ml-1"></i>
           )}
-          {country.infectionStateRatioPercentages.confirmed < 100 &&
-            country.infectionStateRatioPercentages.confirmed > 0 && (
+          {country.pastWeekChanges.confirmed < 100 &&
+            country.pastWeekChanges.confirmed > 0 && (
               <i className="fas fa-angle-up text-orange-300 sm:ml-2 ml-1"></i>
             )}
-          {country.infectionStateRatioPercentages.confirmed < 0 && (
+          {country.pastWeekChanges.confirmed < 0 && (
             <i className="fas fa-angle-down text-green-300 sm:ml-2 ml-1"></i>
           )}
         </div>
