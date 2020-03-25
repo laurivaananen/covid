@@ -11,35 +11,14 @@ export interface ICountry {
 
 export interface ICaseStatistics {
   confirmed: number;
+  deaths: number;
 }
 
-// const countryLatestData = (country: ICountry): IDailyStatistic => {
-//   const latest = Object.values(country.timeseries)[
-//     Object.keys(country.timeseries).length - 1
-//   ];
-//   console.log(latest.recovered);
-//   if (!latest) {
-//     return { confirmed: 0, deaths: 0, recovered: 0 };
-//   }
-//   return latest;
-// };
-
-// const countryPastWeek = (country: ICountry): IDailyStatistic => {
-//   const latest = Object.values(country.timeseries)[
-//     Object.keys(country.timeseries).length - 8
-//   ];
-//   if (!latest) {
-//     return { confirmed: 0, deaths: 0, recovered: 0 };
-//   }
-//   return latest;
-// };
-
-const calculateConfirmedPastWeekChange = (countryRow: string[]) => {
+const calculatePastWeekChange = (countryRow: string[]) => {
   const latest = Number.parseInt(countryRow[countryRow.length - 1]);
   const pastWeek = Number.parseInt(countryRow[countryRow.length - 8]);
-  const confirmedRatePercentagePastWeek =
-    ((latest - pastWeek) / pastWeek) * 100;
-  return confirmedRatePercentagePastWeek;
+  const percentageChangePastWeek = ((latest - pastWeek) / pastWeek) * 100;
+  return percentageChangePastWeek;
 };
 
 const App = () => {
@@ -49,18 +28,24 @@ const App = () => {
     const confirmedTimeSeries = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
     );
-    const parsedData = parse(confirmedTimeSeries.data);
-    const cleanedData: ICountry[] = parsedData
+    const deathsTimeSeries = await axios(
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+    );
+    const parsedConfirmedData = parse(confirmedTimeSeries.data);
+    const parsedDeathsData = parse(deathsTimeSeries.data);
+    const cleanedData: ICountry[] = parsedConfirmedData
       .slice(1)
       .map((countryRow: string[], index: number) => {
         const countryData: ICountry = {
           region: buildRegionName(countryRow[1], countryRow[0]),
-          isOpen: index === 0 ? true : false,
+          isOpen: false,
           total: {
-            confirmed: Number.parseInt(countryRow[countryRow.length - 1])
+            confirmed: Number.parseInt(countryRow[countryRow.length - 1]),
+            deaths: Number.parseInt(parsedDeathsData[countryRow.length - 1])
           },
           changePastWeek: {
-            confirmed: calculateConfirmedPastWeekChange(countryRow)
+            confirmed: calculatePastWeekChange(countryRow),
+            deaths: calculatePastWeekChange(parsedDeathsData[index + 1])
           }
         };
         return countryData;
@@ -68,7 +53,12 @@ const App = () => {
       .sort(
         (country1: ICountry, country2: ICountry) =>
           country2.total.confirmed - country1.total.confirmed
-      );
+      )
+      .map((country: ICountry[], index: number) => {
+        return Object.assign({}, country, {
+          isOpen: index === 0 ? true : false
+        });
+      });
     console.log(cleanedData);
     setGlobalData(cleanedData);
   };
@@ -131,12 +121,12 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
   toggleCountry
 }) => {
   return (
-    <li
-      onClick={() => toggleCountry(country)}
-      className={`${!(index % 2) ? "bg-gray-100" : ""} cursor-pointer`}
-    >
+    <li className={`${!(index % 2) ? "bg-gray-100" : ""}`}>
       <div className={`flex py-2 w-full`}>
-        <div className="px-1 sm:px-4 md:w-2/12 w-5/12 font-bold">
+        <div
+          onClick={() => toggleCountry(country)}
+          className="px-1 sm:px-4 md:w-2/12 w-5/12 font-bold cursor-pointer"
+        >
           <i
             className={`fas ${
               country.isOpen
@@ -179,6 +169,10 @@ const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
         <div>
           Infection Rate Past Week:{" "}
           {buildInfectionRatePercentage(country.changePastWeek.confirmed)}
+        </div>
+        <div>
+          Death Rate Past Week:{" "}
+          {buildInfectionRatePercentage(country.changePastWeek.deaths)}
         </div>
       </div>
     </li>
