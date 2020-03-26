@@ -8,12 +8,10 @@ export interface IListRowContainerProps {
 export const ListRowContainer: React.FunctionComponent<
   IListRowContainerProps
 > = ({ index, children }) => (
-  <li
-    className={`${
-      !(index % 2 === 1) ? "bg-gray-100" : ""
-    } flex flex-wrap py-2 w-full`}
-  >
-    {children}
+  <li className={`${!(index % 2 === 1) ? "bg-gray-100" : ""} py-2`}>
+    <div className=" w-full lg:max-w-6xl mx-auto flex flex-wrap ">
+      {children}
+    </div>
   </li>
 );
 
