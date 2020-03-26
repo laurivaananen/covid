@@ -9,6 +9,7 @@ export interface ICountry {
   total: ICaseStatistics;
   changePastWeek: ICaseStatistics;
   caseShare: ICaseStatistics;
+  lastWeek: ICaseStatistics;
 }
 
 export interface ICaseStatistics {
@@ -17,15 +18,46 @@ export interface ICaseStatistics {
   recovered: number;
 }
 
-const calculatePastWeekChange = (countryRow: string[]) => {
-  const latest = Number.parseInt(countryRow[countryRow.length - 1]);
-  const pastWeek = Number.parseInt(countryRow[countryRow.length - 8]);
+const calculatePastWeekChange = (latest: number, pastWeek: number) => {
   if (pastWeek === 0) {
     return 0;
   }
   const percentageChangePastWeek = ((latest - pastWeek) / pastWeek) * 100 || 0;
   return percentageChangePastWeek;
 };
+
+export interface IListRowContainerProps {
+  index: number;
+  children: any | any[];
+}
+
+export const ListRowContainer: React.FunctionComponent<
+  IListRowContainerProps
+> = ({ index, children }) => (
+  <li
+    className={`${
+      !(index % 1) ? "bg-gray-100" : ""
+    } flex flex-wrap py-2 w-full`}
+  >
+    {children}
+  </li>
+);
+
+export interface IListRowContainerFirstItemProps {
+  children: any | any[];
+}
+
+export const ListRowContainerFirstItem: React.FunctionComponent<
+  IListRowContainerFirstItemProps
+> = ({ children }) => (
+  <div className="px-1 sm:px-4 md:w-2/12 w-5/12 flex">{children}</div>
+);
+
+export const ListRowContainerSecondItem: React.FunctionComponent<
+  IListRowContainerFirstItemProps
+> = ({ children }) => (
+  <div className="px-1 sm:px-4 md:w-10/12 w-7/12 flex">{children}</div>
+);
 
 const App = () => {
   const [globalData, setGlobalData] = useState([] as ICountry[]);
@@ -69,6 +101,15 @@ const App = () => {
         const totalRecovered = recoveredCountryRow
           ? Number.parseInt(recoveredCountryRow[recoveredCountryRow.length - 1])
           : 0;
+        const lastWeekConfirmed = Number.parseInt(
+          confirmedCountryRow[confirmedCountryRow.length - 8]
+        );
+        const lastWeekDeaths = deathCountryRow
+          ? Number.parseInt(deathCountryRow[deathCountryRow.length - 8])
+          : 0;
+        const lastWeekRecovered = recoveredCountryRow
+          ? Number.parseInt(recoveredCountryRow[recoveredCountryRow.length - 8])
+          : 0;
         const totalCases = totalConfirmed + totalDeaths + totalRecovered;
         const countryData: ICountry = {
           region: countryRegion,
@@ -79,35 +120,65 @@ const App = () => {
             recovered: totalRecovered
           },
           changePastWeek: {
-            confirmed: calculatePastWeekChange(confirmedCountryRow),
+            confirmed: calculatePastWeekChange(
+              totalConfirmed,
+              lastWeekConfirmed
+            ),
             deaths: deathCountryRow
-              ? calculatePastWeekChange(deathCountryRow)
+              ? calculatePastWeekChange(totalDeaths, lastWeekDeaths)
               : 0,
             recovered: recoveredCountryRow
-              ? calculatePastWeekChange(recoveredCountryRow)
+              ? calculatePastWeekChange(totalRecovered, lastWeekRecovered)
               : 0
           },
           caseShare: {
             confirmed: (totalConfirmed / totalCases) * 100 || 0,
             deaths: (totalDeaths / totalCases) * 100 || 0,
             recovered: (totalRecovered / totalCases) * 100 || 0
+          },
+          lastWeek: {
+            confirmed: lastWeekConfirmed,
+            deaths: lastWeekDeaths,
+            recovered: lastWeekRecovered
           }
         };
         return countryData;
       });
     const totalData = cleanedData.reduce(
-      (totalCountry: ICountry, country: ICountry) => {
+      (
+        totalCountry: ICountry,
+        country: ICountry,
+        index: number,
+        array: ICountry[]
+      ) => {
         totalCountry.caseShare.confirmed += country.caseShare.confirmed;
         totalCountry.caseShare.deaths += country.caseShare.deaths;
         totalCountry.caseShare.recovered += country.caseShare.recovered;
         totalCountry.total.confirmed += country.total.confirmed;
         totalCountry.total.deaths += country.total.deaths;
         totalCountry.total.recovered += country.total.recovered;
+        totalCountry.lastWeek.confirmed += country.lastWeek.confirmed;
+        totalCountry.lastWeek.deaths += country.lastWeek.deaths;
+        totalCountry.lastWeek.recovered += country.lastWeek.recovered;
         totalCountry.changePastWeek.confirmed +=
           country.changePastWeek.confirmed;
         totalCountry.changePastWeek.deaths += country.changePastWeek.deaths;
         totalCountry.changePastWeek.recovered +=
           country.changePastWeek.recovered;
+        if (index === array.length - 1) {
+          totalCountry.changePastWeek.confirmed = calculatePastWeekChange(
+            totalCountry.total.confirmed,
+            totalCountry.lastWeek.confirmed
+          );
+          totalCountry.changePastWeek.deaths = calculatePastWeekChange(
+            totalCountry.total.deaths,
+            totalCountry.lastWeek.deaths
+          );
+          totalCountry.changePastWeek.recovered = calculatePastWeekChange(
+            totalCountry.total.recovered,
+            totalCountry.lastWeek.recovered
+          );
+        }
         return totalCountry;
       },
       {
@@ -123,6 +194,11 @@ const App = () => {
           recovered: 0
         },
         changePastWeek: {
+          confirmed: 0,
+          deaths: 0,
+          recovered: 0
+        },
+        lastWeek: {
           confirmed: 0,
           deaths: 0,
           recovered: 0
@@ -163,23 +239,21 @@ const App = () => {
   return (
     <div className="text-gray-800 sm:text-base text-sm antialiased">
       <ul>
-        <li>
-          <div className="flex items-center">
-            <div className="font-bold mx-1 sm:mx-2 sm:w-2/12 w-5/12 text-xl text-center">
-              Region
-            </div>
-            <div className="mx-1 sm:mx-2 sm:w-10/12 w-7/12 flex">
-              <span className="text-red-600 bg-red-400 text-5xl flex-1 text-center">
-                <i className="fas fa-cross"></i>
-                <span className="text-sm block">Deaths</span>
-              </span>
-              <span className="text-yellow-600 bg-yellow-400 text-5xl flex-1 text-center">
-                <i className="fas fa-biohazard"></i>
-                <span className="text-sm block">Confirmed</span>
-              </span>
-            </div>
-          </div>
-        </li>
+        <ListRowContainer index={1}>
+          <ListRowContainerFirstItem>
+            <h2 className="text-2xl m-auto font-bold">Region</h2>
+          </ListRowContainerFirstItem>
+          <ListRowContainerSecondItem>
+            <span className="text-red-600 bg-red-400 text-5xl flex-1 text-center">
+              <i className="fas fa-cross"></i>
+              <span className="text-sm block">Deaths</span>
+            </span>
+            <span className="text-yellow-600 bg-yellow-400 text-5xl flex-1 text-center">
+              <i className="fas fa-biohazard"></i>
+              <span className="text-sm block">Confirmed</span>
+            </span>
+          </ListRowContainerSecondItem>
+        </ListRowContainer>
         {globalData.map((country: ICountry, index: number) => {
           return (
             <CountryItem
