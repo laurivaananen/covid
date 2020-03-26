@@ -106,22 +106,33 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
       <div
         className={`${
           country.isOpen ? "visible" : "hidden"
-        } w-full flex flex-col px-1 sm:px-4 py-2`}
+        } w-full flex flex-col px-1 sm:px-4 pt-4 ml-6`}
       >
-        <div>
-          Infection Rate Past Week:{" "}
-          {buildInfectionRatePercentage(country.changePastWeek.confirmed)}
-        </div>
-        <div>
-          Death Rate Past Week:{" "}
-          {buildInfectionRatePercentage(country.changePastWeek.deaths)}
-        </div>
-        <div>
-          Recovery Rate Past Week:{" "}
-          <span className={`text-green-400 font-bold`}>
-            +{Math.round(country.changePastWeek.recovered)}%
-          </span>
-        </div>
+        <dl className="max-w-md">
+          <div>
+            <h3 className="font-bold mb-2">Change Past Week</h3>
+          </div>
+          <div className="grid grid-cols-2">
+            <dt className="text-gray-600">Confirmed</dt>
+            <dd>
+              {buildInfectionRatePercentage(country.changePastWeek.confirmed)}
+            </dd>
+          </div>
+          <div className="grid grid-cols-2">
+            <dt className="text-gray-600">Deaths</dt>
+            <dd>
+              {buildInfectionRatePercentage(country.changePastWeek.deaths)}
+            </dd>
+          </div>
+          <div className="grid grid-cols-2">
+            <dt className="text-gray-600">Recovered</dt>
+            <dd>
+              <span className={`text-green-400 font-bold`}>
+                +{Math.round(country.changePastWeek.recovered)}%
+              </span>
+            </dd>
+          </div>
+        </dl>
       </div>
     </ListRowContainer>
   );
