@@ -1,71 +1,47 @@
-import React from "react";
-import { ICountry } from "./App";
-import {
-  ListRowContainer,
-  ListRowContainerFirstItem,
-  ListRowContainerSecondItem
-} from "./ListItem";
+import React from "react"
+import { ICountry } from "./App"
+import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
 
 export interface ICountryItemProps {
-  country: ICountry;
-  index: number;
-  toggleCountry: (country: ICountry) => void;
+  country: ICountry
+  index: number
+  toggleCountry: (country: ICountry) => void
 }
 
 const buildInfectionRatePercentage = (rate: number) => {
-  const countryInfectionRate = Math.round(rate);
+  const countryInfectionRate = Math.round(rate)
   if (countryInfectionRate > 100) {
-    return (
-      <span className={`text-red-400 font-bold`}>+{countryInfectionRate}%</span>
-    );
+    return <span className={`text-red-400 font-bold`}>+{countryInfectionRate}%</span>
   } else if (countryInfectionRate > 0) {
-    return (
-      <span className={`text-orange-400 font-bold`}>
-        +{countryInfectionRate}%
-      </span>
-    );
+    return <span className={`text-orange-400 font-bold`}>+{countryInfectionRate}%</span>
   } else if (countryInfectionRate === 0) {
-    return (
-      <span className={`text-yellow-400 font-bold`}>
-        {countryInfectionRate}%
-      </span>
-    );
+    return <span className={`text-yellow-400 font-bold`}>{countryInfectionRate}%</span>
   } else {
-    return (
-      <span className={`text-green-400 font-bold`}>
-        -{countryInfectionRate}%
-      </span>
-    );
+    return <span className={`text-green-400 font-bold`}>-{countryInfectionRate}%</span>
   }
-};
+}
 
 export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
   country,
   index,
-  toggleCountry
+  toggleCountry,
 }) => {
   return (
     <ListRowContainer index={index}>
       <ListRowContainerFirstItem>
-        <div
-          className="font-bold cursor-pointer"
-          onClick={() => toggleCountry(country)}
-        >
+        <div className="font-bold cursor-pointer" onClick={() => toggleCountry(country)}>
           <i
             className={`fas ${
-              country.isOpen
-                ? "fa-chevron-circle-down"
-                : "fa-chevron-circle-right"
+              country.isOpen ? "fa-chevron-circle-down" : "fa-chevron-circle-right"
             } text-gray-400 sm:mr-2 mr-1`}
           ></i>
           {country.region}
           {country.changePastWeek.confirmed > 100 && (
             <i className="fas fa-angle-double-up text-red-300 sm:ml-2 ml-1"></i>
           )}
-          {country.changePastWeek.confirmed < 100 &&
-            country.changePastWeek.confirmed > 0 && (
-              <i className="fas fa-angle-up text-orange-300 sm:ml-2 ml-1"></i>
-            )}
+          {country.changePastWeek.confirmed < 100 && country.changePastWeek.confirmed > 0 && (
+            <i className="fas fa-angle-up text-orange-300 sm:ml-2 ml-1"></i>
+          )}
           {country.changePastWeek.confirmed < 0 && (
             <i className="fas fa-angle-down text-green-300 sm:ml-2 ml-1"></i>
           )}
@@ -75,7 +51,7 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
         <div
           className="bg-red-400 h-full flex"
           style={{
-            width: `${country.caseShare.deaths}%`
+            width: `${country.caseShare.deaths}%`,
           }}
         >
           <span className="m-auto text-red-600 font-bold overflow-x-hidden">
@@ -85,7 +61,7 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
         <div
           className="bg-yellow-400 h-full flex"
           style={{
-            width: `${country.caseShare.confirmed}%`
+            width: `${country.caseShare.confirmed}%`,
           }}
         >
           <span className="m-auto text-yellow-600 font-bold overflow-x-hidden">
@@ -95,7 +71,7 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
         <div
           className="bg-green-400 h-full flex"
           style={{
-            width: `${country.caseShare.recovered}%`
+            width: `${country.caseShare.recovered}%`,
           }}
         >
           <span className="m-auto text-green-600 font-bold overflow-x-hidden">
@@ -114,15 +90,11 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
           </div>
           <div className="flex justify-between sm:grid sm:grid-cols-2">
             <dt className="text-gray-600">Confirmed</dt>
-            <dd>
-              {buildInfectionRatePercentage(country.changePastWeek.confirmed)}
-            </dd>
+            <dd>{buildInfectionRatePercentage(country.changePastWeek.confirmed)}</dd>
           </div>
           <div className="flex justify-between sm:grid sm:grid-cols-2">
             <dt className="text-gray-600">Deaths</dt>
-            <dd>
-              {buildInfectionRatePercentage(country.changePastWeek.deaths)}
-            </dd>
+            <dd>{buildInfectionRatePercentage(country.changePastWeek.deaths)}</dd>
           </div>
           <div className="flex justify-between sm:grid sm:grid-cols-2">
             <dt className="text-gray-600">Recovered</dt>
@@ -135,5 +107,5 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
         </dl>
       </div>
     </ListRowContainer>
-  );
-};
+  )
+}

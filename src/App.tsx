@@ -1,178 +1,158 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import parse from "csv-parse/lib/sync";
-import { CountryItem } from "./CountryItem";
-import {
-  ListRowContainer,
-  ListRowContainerFirstItem,
-  ListRowContainerSecondItem
-} from "./ListItem";
+import React, { useState, useEffect } from "react"
+import axios from "axios"
+import parse from "csv-parse/lib/sync"
+import { CountryItem } from "./CountryItem"
+import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
 
 export interface ICountry {
-  region: string;
-  isOpen: boolean;
-  total: ICaseStatistics;
-  changePastWeek: ICaseStatistics;
-  caseShare: ICaseStatistics;
-  lastWeek: ICaseStatistics;
+  region: string
+  isOpen: boolean
+  total: ICaseStatistics
+  changePastWeek: ICaseStatistics
+  caseShare: ICaseStatistics
+  lastWeek: ICaseStatistics
 }
 
 export interface ICaseStatistics {
-  confirmed: number;
-  deaths: number;
-  recovered: number;
+  confirmed: number
+  deaths: number
+  recovered: number
 }
 
 const calculatePastWeekChange = (latest: number, pastWeek: number) => {
   if (pastWeek === 0) {
-    return 0;
+    return 0
   }
-  const percentageChangePastWeek = ((latest - pastWeek) / pastWeek) * 100 || 0;
-  return percentageChangePastWeek;
-};
+  const percentageChangePastWeek = ((latest - pastWeek) / pastWeek) * 100 || 0
+  return percentageChangePastWeek
+}
 
 const App = () => {
-  const [globalData, setGlobalData] = useState([] as ICountry[]);
+  const [globalData, setGlobalData] = useState([] as ICountry[])
 
   const FetchData = async () => {
     const confirmedTimeSeries = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-    );
+    )
     const deathsTimeSeries = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-    );
+    )
     const recoveredTimeSeries = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
-    );
-    const parsedConfirmedData: string[][] = parse(confirmedTimeSeries.data);
-    const parsedDeathsData: string[][] = parse(deathsTimeSeries.data);
-    const parsedRecoveredData: string[][] = parse(recoveredTimeSeries.data);
+    )
+    const parsedConfirmedData: string[][] = parse(confirmedTimeSeries.data)
+    const parsedDeathsData: string[][] = parse(deathsTimeSeries.data)
+    const parsedRecoveredData: string[][] = parse(recoveredTimeSeries.data)
+
     const cleanedData: ICountry[] = parsedConfirmedData
       .slice(1)
       .map((confirmedCountryRow: string[], index: number) => {
-        const countryRegion = buildRegionName(
-          confirmedCountryRow[1],
-          confirmedCountryRow[0]
-        );
+        const countryRegion = buildRegionName(confirmedCountryRow[1], confirmedCountryRow[0])
         const deathCountryRow = parsedDeathsData.find(
           (deathCountryRow: string[]) =>
-            countryRegion ===
-            buildRegionName(deathCountryRow[1], deathCountryRow[0])
-        );
+            countryRegion === buildRegionName(deathCountryRow[1], deathCountryRow[0])
+        )
         const recoveredCountryRow = parsedRecoveredData.find(
           (recoveredCountryRow: string[]) =>
-            countryRegion ===
-            buildRegionName(recoveredCountryRow[1], recoveredCountryRow[0])
-        );
-        const totalConfirmed = Number.parseInt(
-          confirmedCountryRow[confirmedCountryRow.length - 1]
-        );
+            countryRegion === buildRegionName(recoveredCountryRow[1], recoveredCountryRow[0])
+        )
+        const totalConfirmed = Number.parseInt(confirmedCountryRow[confirmedCountryRow.length - 1])
         const totalDeaths = deathCountryRow
           ? Number.parseInt(deathCountryRow[deathCountryRow.length - 1])
-          : 0;
+          : 0
         const totalRecovered = recoveredCountryRow
           ? Number.parseInt(recoveredCountryRow[recoveredCountryRow.length - 1])
-          : 0;
+          : 0
         const lastWeekConfirmed = Number.parseInt(
           confirmedCountryRow[confirmedCountryRow.length - 8]
-        );
+        )
         const lastWeekDeaths = deathCountryRow
           ? Number.parseInt(deathCountryRow[deathCountryRow.length - 8])
-          : 0;
+          : 0
         const lastWeekRecovered = recoveredCountryRow
           ? Number.parseInt(recoveredCountryRow[recoveredCountryRow.length - 8])
-          : 0;
-        const totalCases = totalConfirmed + totalDeaths + totalRecovered;
+          : 0
+        const totalCases = totalConfirmed + totalDeaths + totalRecovered
         const countryData: ICountry = {
           region: countryRegion,
           isOpen: false,
           total: {
             confirmed: totalConfirmed,
             deaths: totalDeaths,
-            recovered: totalRecovered
+            recovered: totalRecovered,
           },
           changePastWeek: {
-            confirmed: calculatePastWeekChange(
-              totalConfirmed,
-              lastWeekConfirmed
-            ),
-            deaths: deathCountryRow
-              ? calculatePastWeekChange(totalDeaths, lastWeekDeaths)
-              : 0,
+            confirmed: calculatePastWeekChange(totalConfirmed, lastWeekConfirmed),
+            deaths: deathCountryRow ? calculatePastWeekChange(totalDeaths, lastWeekDeaths) : 0,
             recovered: recoveredCountryRow
               ? calculatePastWeekChange(totalRecovered, lastWeekRecovered)
-              : 0
+              : 0,
           },
           caseShare: {
             confirmed: (totalConfirmed / totalCases) * 100 || 0,
             deaths: (totalDeaths / totalCases) * 100 || 0,
-            recovered: (totalRecovered / totalCases) * 100 || 0
+            recovered: (totalRecovered / totalCases) * 100 || 0,
           },
           lastWeek: {
             confirmed: lastWeekConfirmed,
             deaths: lastWeekDeaths,
-            recovered: lastWeekRecovered
-          }
-        };
-        return countryData;
-      });
+            recovered: lastWeekRecovered,
+          },
+        }
+        return countryData
+      })
     const totalData = cleanedData.reduce(
-      (
-        totalCountry: ICountry,
-        country: ICountry,
-        index: number,
-        array: ICountry[]
-      ) => {
-        totalCountry.caseShare.confirmed += country.caseShare.confirmed;
-        totalCountry.caseShare.deaths += country.caseShare.deaths;
-        totalCountry.caseShare.recovered += country.caseShare.recovered;
-        totalCountry.total.confirmed += country.total.confirmed;
-        totalCountry.total.deaths += country.total.deaths;
-        totalCountry.total.recovered += country.total.recovered;
-        totalCountry.lastWeek.confirmed += country.lastWeek.confirmed;
-        totalCountry.lastWeek.deaths += country.lastWeek.deaths;
-        totalCountry.lastWeek.recovered += country.lastWeek.recovered;
+      (totalCountry: ICountry, country: ICountry, index: number, array: ICountry[]) => {
+        totalCountry.caseShare.confirmed += country.caseShare.confirmed
+        totalCountry.caseShare.deaths += country.caseShare.deaths
+        totalCountry.caseShare.recovered += country.caseShare.recovered
+        totalCountry.total.confirmed += country.total.confirmed
+        totalCountry.total.deaths += country.total.deaths
+        totalCountry.total.recovered += country.total.recovered
+        totalCountry.lastWeek.confirmed += country.lastWeek.confirmed
+        totalCountry.lastWeek.deaths += country.lastWeek.deaths
+        totalCountry.lastWeek.recovered += country.lastWeek.recovered
         if (index === array.length - 1) {
           totalCountry.changePastWeek.confirmed = calculatePastWeekChange(
             totalCountry.total.confirmed,
             totalCountry.lastWeek.confirmed
-          );
+          )
           totalCountry.changePastWeek.deaths = calculatePastWeekChange(
             totalCountry.total.deaths,
             totalCountry.lastWeek.deaths
-          );
+          )
           totalCountry.changePastWeek.recovered = calculatePastWeekChange(
             totalCountry.total.recovered,
             totalCountry.lastWeek.recovered
-          );
+          )
         }
-        return totalCountry;
+        return totalCountry
       },
       {
         region: "Total",
         caseShare: {
           confirmed: 0,
           deaths: 0,
-          recovered: 0
+          recovered: 0,
         },
         total: {
           confirmed: 0,
           deaths: 0,
-          recovered: 0
+          recovered: 0,
         },
         changePastWeek: {
           confirmed: 0,
           deaths: 0,
-          recovered: 0
+          recovered: 0,
         },
         lastWeek: {
           confirmed: 0,
           deaths: 0,
-          recovered: 0
+          recovered: 0,
         },
-        isOpen: false
+        isOpen: false,
       }
-    );
+    )
     setGlobalData(
       [totalData]
         .concat(cleanedData)
@@ -182,26 +162,29 @@ const App = () => {
         )
         .map((country: ICountry, index: number) =>
           Object.assign({}, country, {
-            isOpen: [0, 1, 2].includes(index) ? true : false
+            isOpen: [0, 1, 2].includes(index) ? true : false,
           })
         )
-    );
-  };
+    )
+  }
 
   const toggleCountry = (country: ICountry) => {
     setGlobalData(
       globalData.map(countryData => {
         if (countryData.region === country.region) {
-          return { ...countryData, isOpen: !countryData.isOpen };
+          return {
+            ...countryData,
+            isOpen: !countryData.isOpen,
+          }
         }
-        return countryData;
+        return countryData
       })
-    );
-  };
+    )
+  }
 
   useEffect(() => {
-    FetchData();
-  }, []);
+    FetchData()
+  }, [])
 
   return (
     <div className="text-gray-800 sm:text-base text-sm antialiased">
@@ -211,13 +194,17 @@ const App = () => {
             <h2 className="text-2xl m-auto font-bold">Region</h2>
           </ListRowContainerFirstItem>
           <ListRowContainerSecondItem>
-            <span className="text-red-600 bg-red-400 text-5xl flex-1 text-center">
+            <span className="text-red-600 bg-red-400 text-5xl flex-grow text-center">
               <i className="fas fa-cross"></i>
               <span className="text-sm block">Deaths</span>
             </span>
-            <span className="text-yellow-600 bg-yellow-400 text-5xl flex-1 text-center">
+            <span className="text-yellow-600 bg-yellow-400 text-5xl flex-grow text-center">
               <i className="fas fa-biohazard"></i>
               <span className="text-sm block">Confirmed</span>
+            </span>
+            <span className="text-green-600 bg-green-400 text-5xl flex-grow text-center">
+              <i className="fas fa-heart"></i>
+              <span className="text-sm block">Recovered</span>
             </span>
           </ListRowContainerSecondItem>
         </ListRowContainer>
@@ -229,18 +216,18 @@ const App = () => {
               index={index}
               toggleCountry={toggleCountry}
             />
-          );
+          )
         })}
       </ul>
     </div>
-  );
-};
+  )
+}
 
 const buildRegionName = (country: string, state: string): string => {
   if (state !== "" && state !== country) {
-    return `${country}, ${state}`;
+    return `${country}, ${state}`
   }
-  return country;
-};
+  return country
+}
 
-export default App;
+export default App
