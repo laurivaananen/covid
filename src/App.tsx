@@ -3,6 +3,7 @@ import axios from "axios"
 import parse from "csv-parse/lib/sync"
 import { CountryItem } from "./CountryItem"
 import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts"
 
 export interface ICountry {
   region: string
@@ -11,6 +12,14 @@ export interface ICountry {
   changePastWeek: ICaseStatistics
   caseShare: ICaseStatistics
   lastWeek: ICaseStatistics
+  timeSeries: IDataPoint[]
+}
+
+export interface IDataPoint {
+  confirmed?: number
+  deaths?: number
+  recovered?: number
+  date: number
 }
 
 export interface ICaseStatistics {
@@ -30,6 +39,20 @@ const calculatePastWeekChange = (latest: number, pastWeek: number) => {
 const App = () => {
   const [globalData, setGlobalData] = useState([] as ICountry[])
 
+  const buildCountryTimeSeries = (
+    countryRow: string[],
+    deathCountryRow: string[],
+    recoveredCountryRow: string[]
+  ): IDataPoint[] => {
+    return countryRow.slice(countryRow.length - 30).map((value: string, index: number) => ({
+      confirmed: Number.parseInt(value),
+      deaths: Number.parseInt(deathCountryRow[index + (countryRow.length - 30)]) || undefined,
+      recovered:
+        Number.parseInt(recoveredCountryRow[index + (countryRow.length - 30)]) || undefined,
+      date: index,
+    }))
+  }
+
   const FetchData = async () => {
     const confirmedTimeSeries = await axios(
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
@@ -48,14 +71,16 @@ const App = () => {
       .slice(1)
       .map((confirmedCountryRow: string[], index: number) => {
         const countryRegion = buildRegionName(confirmedCountryRow[1], confirmedCountryRow[0])
-        const deathCountryRow = parsedDeathsData.find(
-          (deathCountryRow: string[]) =>
-            countryRegion === buildRegionName(deathCountryRow[1], deathCountryRow[0])
-        )
-        const recoveredCountryRow = parsedRecoveredData.find(
-          (recoveredCountryRow: string[]) =>
-            countryRegion === buildRegionName(recoveredCountryRow[1], recoveredCountryRow[0])
-        )
+        const deathCountryRow =
+          parsedDeathsData.find(
+            (deathCountryRow: string[]) =>
+              countryRegion === buildRegionName(deathCountryRow[1], deathCountryRow[0])
+          ) || []
+        const recoveredCountryRow =
+          parsedRecoveredData.find(
+            (recoveredCountryRow: string[]) =>
+              countryRegion === buildRegionName(recoveredCountryRow[1], recoveredCountryRow[0])
+          ) || []
         const totalConfirmed = Number.parseInt(confirmedCountryRow[confirmedCountryRow.length - 1])
         const totalDeaths = deathCountryRow
           ? Number.parseInt(deathCountryRow[deathCountryRow.length - 1])
@@ -98,6 +123,11 @@ const App = () => {
             deaths: lastWeekDeaths,
             recovered: lastWeekRecovered,
           },
+          timeSeries: buildCountryTimeSeries(
+            confirmedCountryRow,
+            deathCountryRow,
+            recoveredCountryRow
+          ),
         }
         return countryData
       })
@@ -151,6 +181,7 @@ const App = () => {
           recovered: 0,
         },
         isOpen: false,
+        timeSeries: [],
       }
     )
     setGlobalData(
@@ -207,6 +238,52 @@ const App = () => {
               <span className="text-sm block">Recovered</span>
             </span>
           </ListRowContainerSecondItem>
+          {/* {globalData.slice(5, 10).map((country: ICountry) => {
+            console.log(country.timeSeries)
+            return (
+              <div>
+                <LineChart
+                  width={1152}
+                  height={300}
+                  data={country.timeSeries}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <Line
+                    type="monotone"
+                    dataKey="confirmed"
+                    stroke="#f6e05e"
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="deaths"
+                    stroke="#fc8181"
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="recovered"
+                    stroke="#68d391"
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive={false}
+                  />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <YAxis />
+                  <XAxis dataKey="date" />
+                </LineChart>
+              </div>
+            )
+          })} */}
         </ListRowContainer>
         {globalData.map((country: ICountry, index: number) => {
           return (

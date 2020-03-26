@@ -1,6 +1,7 @@
 import React from "react"
 import { ICountry } from "./App"
 import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts"
 
 export interface ICountryItemProps {
   country: ICountry
@@ -105,6 +106,47 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
             </dd>
           </div>
         </dl>
+        <div>
+          <LineChart
+            width={1152}
+            height={300}
+            data={country.timeSeries}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <Line
+              type="monotone"
+              dataKey="confirmed"
+              stroke="#f6e05e"
+              strokeWidth={2}
+              dot={false}
+              isAnimationActive={false}
+            />
+            <Line
+              type="monotone"
+              dataKey="deaths"
+              stroke="#fc8181"
+              strokeWidth={2}
+              dot={false}
+              isAnimationActive={false}
+            />
+            <Line
+              type="monotone"
+              dataKey="recovered"
+              stroke="#68d391"
+              strokeWidth={2}
+              dot={false}
+              isAnimationActive={false}
+            />
+            <CartesianGrid strokeDasharray="3 3" />
+            <YAxis />
+            <XAxis dataKey="date" />
+          </LineChart>
+        </div>
       </div>
     </ListRowContainer>
   )

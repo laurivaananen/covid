@@ -17,6 +17,7 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
+    "recharts": "^1.8.5",
     "typescript": "~3.7.2"
   },
   "scripts": {
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^2.1.0",
+    "@types/recharts": "^1.8.9",
     "autoprefixer": "^9.7.4",
     "postcss-cli": "^7.1.0",
     "tailwindcss": "^1.2.0"
