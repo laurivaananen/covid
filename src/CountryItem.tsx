@@ -1,7 +1,8 @@
 import React from "react"
 import { ICountry } from "./App"
 import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts"
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts"
+import * as Victory from "victory"
 
 export interface ICountryItemProps {
   country: ICountry
@@ -107,7 +108,39 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
           </div>
         </dl>
         <div>
-          <LineChart
+          <Victory.VictoryChart domainPadding={20} theme={Victory.VictoryTheme.material}>
+            <Victory.VictoryLine
+              style={{
+                data: {
+                  stroke: "#f6e05e",
+                },
+              }}
+              data={country.timeSeries}
+              x="date"
+              y="confirmed"
+            />
+            <Victory.VictoryLine
+              style={{
+                data: {
+                  stroke: "#fc8181",
+                },
+              }}
+              data={country.timeSeries}
+              x="date"
+              y="deaths"
+            />
+            <Victory.VictoryLine
+              style={{
+                data: {
+                  stroke: "#68d391",
+                },
+              }}
+              data={country.timeSeries}
+              x="date"
+              y="recovered"
+            />
+          </Victory.VictoryChart>
+          {/* <LineChart
             width={1152}
             height={300}
             data={country.timeSeries}
@@ -142,10 +175,10 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
               dot={false}
               isAnimationActive={false}
             />
-            <CartesianGrid strokeDasharray="3 3" />
-            <YAxis />
-            <XAxis dataKey="date" />
-          </LineChart>
+            <CartesianGrid stroke="#eeeeee" />
+            <YAxis stroke="#bbbbbb" />
+            <XAxis stroke="#bbbbbb" dataKey="date" />
+          </LineChart> */}
         </div>
       </div>
     </ListRowContainer>

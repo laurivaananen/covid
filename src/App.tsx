@@ -3,7 +3,7 @@ import axios from "axios"
 import parse from "csv-parse/lib/sync"
 import { CountryItem } from "./CountryItem"
 import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts"
+import * as Victory from "victory"
 
 export interface ICountry {
   region: string
@@ -16,9 +16,9 @@ export interface ICountry {
 }
 
 export interface IDataPoint {
-  confirmed?: number
-  deaths?: number
-  recovered?: number
+  confirmed: number
+  deaths: number
+  recovered: number
   date: number
 }
 
@@ -46,9 +46,8 @@ const App = () => {
   ): IDataPoint[] => {
     return countryRow.slice(countryRow.length - 30).map((value: string, index: number) => ({
       confirmed: Number.parseInt(value),
-      deaths: Number.parseInt(deathCountryRow[index + (countryRow.length - 30)]) || undefined,
-      recovered:
-        Number.parseInt(recoveredCountryRow[index + (countryRow.length - 30)]) || undefined,
+      deaths: Number.parseInt(deathCountryRow[index + (countryRow.length - 30)]) || 0,
+      recovered: Number.parseInt(recoveredCountryRow[index + (countryRow.length - 30)]) || 0,
       date: index,
     }))
   }
@@ -242,50 +241,12 @@ const App = () => {
             console.log(country.timeSeries)
             return (
               <div>
-                <LineChart
-                  width={1152}
-                  height={300}
-                  data={country.timeSeries}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <Line
-                    type="monotone"
-                    dataKey="confirmed"
-                    stroke="#f6e05e"
-                    strokeWidth={2}
-                    dot={false}
-                    isAnimationActive={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="deaths"
-                    stroke="#fc8181"
-                    strokeWidth={2}
-                    dot={false}
-                    isAnimationActive={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="recovered"
-                    stroke="#68d391"
-                    strokeWidth={2}
-                    dot={false}
-                    isAnimationActive={false}
-                  />
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <YAxis />
-                  <XAxis dataKey="date" />
-                </LineChart>
+                <Victory.VictoryLine data={country.timeSeries} x="date" y="confirmed" />
               </div>
             )
           })} */}
         </ListRowContainer>
-        {globalData.map((country: ICountry, index: number) => {
+        {globalData.slice(1).map((country: ICountry, index: number) => {
           return (
             <CountryItem
               key={`${country.region}`}
