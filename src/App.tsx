@@ -132,11 +132,6 @@ const App = () => {
         totalCountry.lastWeek.confirmed += country.lastWeek.confirmed;
         totalCountry.lastWeek.deaths += country.lastWeek.deaths;
         totalCountry.lastWeek.recovered += country.lastWeek.recovered;
-        totalCountry.changePastWeek.confirmed +=
-          country.changePastWeek.confirmed;
-        totalCountry.changePastWeek.deaths += country.changePastWeek.deaths;
-        totalCountry.changePastWeek.recovered +=
-          country.changePastWeek.recovered;
         if (index === array.length - 1) {
           totalCountry.changePastWeek.confirmed = calculatePastWeekChange(
             totalCountry.total.confirmed,

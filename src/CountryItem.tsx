@@ -106,25 +106,25 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
       <div
         className={`${
           country.isOpen ? "visible" : "hidden"
-        } w-full flex flex-col px-1 sm:px-4 pt-4 ml-6`}
+        } w-full flex flex-col px-1 sm:px-4 pt-4 mx-6`}
       >
-        <dl className="max-w-md">
+        <dl className="sm:max-w-md">
           <div>
             <h3 className="font-bold mb-2">Change Past Week</h3>
           </div>
-          <div className="grid grid-cols-2">
+          <div className="flex justify-between sm:grid sm:grid-cols-2">
             <dt className="text-gray-600">Confirmed</dt>
             <dd>
               {buildInfectionRatePercentage(country.changePastWeek.confirmed)}
             </dd>
           </div>
-          <div className="grid grid-cols-2">
+          <div className="flex justify-between sm:grid sm:grid-cols-2">
             <dt className="text-gray-600">Deaths</dt>
             <dd>
               {buildInfectionRatePercentage(country.changePastWeek.deaths)}
             </dd>
           </div>
-          <div className="grid grid-cols-2">
+          <div className="flex justify-between sm:grid sm:grid-cols-2">
             <dt className="text-gray-600">Recovered</dt>
             <dd>
               <span className={`text-green-400 font-bold`}>
