@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import parse from "csv-parse/lib/sync";
 import { CountryItem } from "./CountryItem";
+import {
+  ListRowContainer,
+  ListRowContainerFirstItem,
+  ListRowContainerSecondItem
+} from "./ListItem";
 
 export interface ICountry {
   region: string;
@@ -25,39 +30,6 @@ const calculatePastWeekChange = (latest: number, pastWeek: number) => {
   const percentageChangePastWeek = ((latest - pastWeek) / pastWeek) * 100 || 0;
   return percentageChangePastWeek;
 };
-
-export interface IListRowContainerProps {
-  index: number;
-  children: any | any[];
-}
-
-export const ListRowContainer: React.FunctionComponent<
-  IListRowContainerProps
-> = ({ index, children }) => (
-  <li
-    className={`${
-      !(index % 1) ? "bg-gray-100" : ""
-    } flex flex-wrap py-2 w-full`}
-  >
-    {children}
-  </li>
-);
-
-export interface IListRowContainerFirstItemProps {
-  children: any | any[];
-}
-
-export const ListRowContainerFirstItem: React.FunctionComponent<
-  IListRowContainerFirstItemProps
-> = ({ children }) => (
-  <div className="px-1 sm:px-4 md:w-2/12 w-5/12 flex">{children}</div>
-);
-
-export const ListRowContainerSecondItem: React.FunctionComponent<
-  IListRowContainerFirstItemProps
-> = ({ children }) => (
-  <div className="px-1 sm:px-4 md:w-10/12 w-7/12 flex">{children}</div>
-);
 
 const App = () => {
   const [globalData, setGlobalData] = useState([] as ICountry[]);

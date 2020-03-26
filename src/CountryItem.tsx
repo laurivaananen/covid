@@ -1,10 +1,10 @@
 import React from "react";
+import { ICountry } from "./App";
 import {
-  ICountry,
   ListRowContainer,
   ListRowContainerFirstItem,
   ListRowContainerSecondItem
-} from "./App";
+} from "./ListItem";
 
 export interface ICountryItemProps {
   country: ICountry;
