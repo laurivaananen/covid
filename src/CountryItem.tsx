@@ -81,106 +81,80 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
           </span>
         </div>
       </ListRowContainerSecondItem>
-      <div
-        className={`${
-          country.isOpen ? "visible" : "hidden"
-        } w-full flex flex-col px-1 sm:px-4 pt-4 mx-6`}
-      >
-        <dl className="sm:max-w-md">
-          <div>
-            <h3 className="font-bold mb-2">Change Past Week</h3>
-          </div>
-          <div className="flex justify-between sm:grid sm:grid-cols-2">
-            <dt className="text-gray-600">Confirmed</dt>
-            <dd>{buildInfectionRatePercentage(country.changePastWeek.confirmed)}</dd>
-          </div>
-          <div className="flex justify-between sm:grid sm:grid-cols-2">
-            <dt className="text-gray-600">Deaths</dt>
-            <dd>{buildInfectionRatePercentage(country.changePastWeek.deaths)}</dd>
-          </div>
-          <div className="flex justify-between sm:grid sm:grid-cols-2">
-            <dt className="text-gray-600">Recovered</dt>
-            <dd>
-              <span className={`text-green-400 font-bold`}>
-                +{Math.round(country.changePastWeek.recovered)}%
-              </span>
-            </dd>
-          </div>
-        </dl>
-        <div>
-          <Victory.VictoryChart domainPadding={20} theme={Victory.VictoryTheme.material}>
-            <Victory.VictoryLine
-              style={{
-                data: {
-                  stroke: "#f6e05e",
-                },
-              }}
+      {country.isOpen ? (
+        <div className={`w-full flex flex-col sm:flex-row pr-1 sm:pr-4 pt-4 pl-8`}>
+          <dl className="sm:max-w-md sm:mr-12">
+            <div>
+              <h3 className="font-bold mb-2">Change Past Week</h3>
+            </div>
+            <div className="flex justify-between sm:grid sm:grid-cols-3">
+              <dt className="text-gray-600 col-span-2 sm:pr-16">Confirmed:</dt>
+              <dd>{buildInfectionRatePercentage(country.changePastWeek.confirmed)}</dd>
+            </div>
+            <div className="flex justify-between sm:grid sm:grid-cols-3">
+              <dt className="text-gray-600 col-span-2 sm:pr-16">Deaths:</dt>
+              <dd>{buildInfectionRatePercentage(country.changePastWeek.deaths)}</dd>
+            </div>
+            <div className="flex justify-between sm:grid sm:grid-cols-3">
+              <dt className="text-gray-600 col-span-2 sm:pr-16">Recovered:</dt>
+              <dd>
+                <span className={`text-green-400 font-bold`}>
+                  +{Math.round(country.changePastWeek.recovered)}%
+                </span>
+              </dd>
+            </div>
+          </dl>
+          <ResponsiveContainer width="100%" height="100%" aspect={3} minWidth={150}>
+            <LineChart
               data={country.timeSeries}
-              x="date"
-              y="confirmed"
-            />
-            <Victory.VictoryLine
-              style={{
-                data: {
-                  stroke: "#fc8181",
-                },
+              margin={{
+                top: 5,
+                right: 30,
+                left: 0,
+                bottom: 5,
               }}
-              data={country.timeSeries}
-              x="date"
-              y="deaths"
-            />
-            <Victory.VictoryLine
-              style={{
-                data: {
-                  stroke: "#68d391",
-                },
-              }}
-              data={country.timeSeries}
-              x="date"
-              y="recovered"
-            />
-          </Victory.VictoryChart>
-          {/* <LineChart
-            width={1152}
-            height={300}
-            data={country.timeSeries}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <Line
-              type="monotone"
-              dataKey="confirmed"
-              stroke="#f6e05e"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="deaths"
-              stroke="#fc8181"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="recovered"
-              stroke="#68d391"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={false}
-            />
-            <CartesianGrid stroke="#eeeeee" />
-            <YAxis stroke="#bbbbbb" />
-            <XAxis stroke="#bbbbbb" dataKey="date" />
-          </LineChart> */}
+            >
+              <CartesianGrid stroke="#eeeeee" />
+              <Line
+                type="monotone"
+                dataKey="confirmed"
+                stroke="#f6e05e"
+                strokeWidth={4}
+                dot={false}
+                isAnimationActive={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="deaths"
+                stroke="#fc8181"
+                strokeWidth={4}
+                dot={false}
+                isAnimationActive={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="recovered"
+                stroke="#68d391"
+                strokeWidth={4}
+                dot={false}
+                isAnimationActive={false}
+              />
+              <YAxis
+                tickFormatter={tick => {
+                  if (tick >= 1000) {
+                    return `${tick / 1000}k`
+                  }
+                  return tick
+                }}
+                type="number"
+                stroke="#aaaaaa"
+                allowDataOverflow={false}
+              />
+              <XAxis stroke="#aaaaaa" dataKey="date" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
-      </div>
+      ) : null}
     </ListRowContainer>
   )
 }

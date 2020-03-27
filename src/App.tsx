@@ -3,7 +3,6 @@ import axios from "axios"
 import parse from "csv-parse/lib/sync"
 import { CountryItem } from "./CountryItem"
 import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
-import * as Victory from "victory"
 
 export interface ICountry {
   region: string
@@ -224,15 +223,15 @@ const App = () => {
             <h2 className="text-2xl m-auto font-bold">Region</h2>
           </ListRowContainerFirstItem>
           <ListRowContainerSecondItem>
-            <span className="text-red-600 bg-red-400 text-5xl flex-grow text-center">
+            <span className="text-red-600 bg-red-400 text-5xl flex-grow text-center overflow-hidden">
               <i className="fas fa-cross"></i>
               <span className="text-sm block">Deaths</span>
             </span>
-            <span className="text-yellow-600 bg-yellow-400 text-5xl flex-grow text-center">
+            <span className="text-yellow-600 bg-yellow-400 text-5xl flex-grow text-center overflow-hidden">
               <i className="fas fa-biohazard"></i>
               <span className="text-sm block">Confirmed</span>
             </span>
-            <span className="text-green-600 bg-green-400 text-5xl flex-grow text-center">
+            <span className="text-green-600 bg-green-400 text-5xl flex-grow text-center overflow-hidden">
               <i className="fas fa-heart"></i>
               <span className="text-sm block">Recovered</span>
             </span>
