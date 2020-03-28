@@ -220,9 +220,9 @@ const App = () => {
   }, [])
 
   return (
-    <main>
+    <main className="text-gray-800 sm:text-base text-sm antialiased">
       <GlobalOverview countries={globalData} />
-      <div className="text-gray-800 sm:text-base text-sm antialiased">
+      <div>
         <ul>
           <ListRowContainer index={1}>
             <ListRowContainerFirstItem>

@@ -16,17 +16,22 @@ import { ICountry } from "./App"
 const LineColors = ["#38b2ac", "#9f7aea", "#ed8936"]
 
 export const GlobalOverviewChart: React.FC<{ countries: ICountry[] }> = ({ countries }) => {
+  const chartAspect = (windowWidth: number) => {
+    if (windowWidth > 1024) {
+      return 2.5
+    } else if (windowWidth > 640) {
+      return 2
+    }
+    return 1.25
+  }
   const [lineHover, setLineHover] = useState<number | undefined>(undefined)
   return (
-    <ResponsiveContainer width="100%" height="100%" aspect={3} minWidth={150}>
+    <ResponsiveContainer width="100%" height="100%" aspect={chartAspect(window.innerWidth)}>
       <LineChart
-        data={countries[1].timeSeries}
         margin={{
-          top: 20,
           right: 20,
-          left: 20,
-          bottom: 20,
         }}
+        data={countries[1].timeSeries}
       >
         <CartesianGrid stroke="#eeeeee" />
         {countries
@@ -47,7 +52,7 @@ export const GlobalOverviewChart: React.FC<{ countries: ICountry[] }> = ({ count
           formatter={TopInfectionsLegendFormatter}
           iconType="square"
         />
-        <XAxis stroke="#aaaaaa" dataKey="date" type="number" tickCount={30} />
+        <XAxis tickMargin={4} stroke="#aaaaaa" dataKey="date" type="number" tickCount={30} />
         <YAxis
           tickFormatter={tick => {
             if (tick >= 1000) {

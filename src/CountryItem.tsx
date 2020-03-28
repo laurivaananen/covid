@@ -115,26 +115,26 @@ export const CountryItem: React.FunctionComponent<ICountryItemProps> = ({
             >
               <CartesianGrid stroke="#eeeeee" />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="confirmed"
                 stroke="#f6e05e"
-                strokeWidth={4}
+                strokeWidth={2}
                 dot={false}
                 isAnimationActive={false}
               />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="deaths"
                 stroke="#fc8181"
-                strokeWidth={4}
+                strokeWidth={2}
                 dot={false}
                 isAnimationActive={false}
               />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="recovered"
                 stroke="#68d391"
-                strokeWidth={4}
+                strokeWidth={2}
                 dot={false}
                 isAnimationActive={false}
               />

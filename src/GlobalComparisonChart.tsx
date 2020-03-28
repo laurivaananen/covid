@@ -18,9 +18,20 @@ const BarIsHidden = (hover: undefined | number, index: number): boolean => {
 
 export const GlobalComparisonChart: React.FC<{ countries: ICountry[] }> = ({ countries }) => {
   const [barHover, setBarHover] = useState<number | undefined>(undefined)
+  const chartAspect = (windowWidth: number) => {
+    if (windowWidth > 1024) {
+      return 2.75
+    } else if (windowWidth > 640) {
+      return 2
+    }
+    return 1.25
+  }
   return (
-    <ResponsiveContainer width="100%" height="100%" aspect={3} minWidth={150}>
+    <ResponsiveContainer width="100%" height="100%" aspect={chartAspect(window.innerWidth)}>
       <BarChart
+        margin={{
+          right: 20,
+        }}
         barGap={0}
         data={countries.slice(1, 4).map((country: ICountry) => ({
           name: country.region,
@@ -28,12 +39,6 @@ export const GlobalComparisonChart: React.FC<{ countries: ICountry[] }> = ({ cou
           deaths: country.total.deaths,
           recovered: country.total.recovered,
         }))}
-        margin={{
-          top: 20,
-          right: 20,
-          left: 20,
-          bottom: 20,
-        }}
       >
         <CartesianGrid stroke="#eeeeee" />
         <Bar
@@ -90,7 +95,7 @@ export const GlobalComparisonChart: React.FC<{ countries: ICountry[] }> = ({ cou
           formatter={CountryComparisonLegendFormatter}
           iconType="square"
         />
-        <XAxis stroke="#aaaaaa" dataKey="name" />
+        <XAxis tickMargin={4} stroke="#aaaaaa" dataKey="name" />
         <YAxis
           tickFormatter={tick => {
             if (tick >= 1000) {
