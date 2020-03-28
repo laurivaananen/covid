@@ -3,6 +3,7 @@ import axios from "axios"
 import parse from "csv-parse/lib/sync"
 import { CountryItem } from "./CountryItem"
 import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
+import { GlobalOverview } from "./GlobalOverview"
 
 export interface ICountry {
   region: string
@@ -53,13 +54,16 @@ const App = () => {
 
   const FetchData = async () => {
     const confirmedTimeSeries = await axios(
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+      // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+      "http://localhost:3000/data.csv"
     )
     const deathsTimeSeries = await axios(
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+      "http://localhost:3000/deaths.csv"
+      // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
     )
     const recoveredTimeSeries = await axios(
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+      "http://localhost:3000/recovered.csv"
+      // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
     )
     const parsedConfirmedData: string[][] = parse(confirmedTimeSeries.data)
     const parsedDeathsData: string[][] = parse(deathsTimeSeries.data)
@@ -216,27 +220,29 @@ const App = () => {
   }, [])
 
   return (
-    <div className="text-gray-800 sm:text-base text-sm antialiased">
-      <ul>
-        <ListRowContainer index={1}>
-          <ListRowContainerFirstItem>
-            <h2 className="text-2xl m-auto font-bold">Region</h2>
-          </ListRowContainerFirstItem>
-          <ListRowContainerSecondItem>
-            <span className="text-red-600 bg-red-400 text-5xl flex-grow text-center overflow-hidden">
-              <i className="fas fa-cross"></i>
-              <span className="text-sm block">Deaths</span>
-            </span>
-            <span className="text-yellow-600 bg-yellow-400 text-5xl flex-grow text-center overflow-hidden">
-              <i className="fas fa-biohazard"></i>
-              <span className="text-sm block">Confirmed</span>
-            </span>
-            <span className="text-green-600 bg-green-400 text-5xl flex-grow text-center overflow-hidden">
-              <i className="fas fa-heart"></i>
-              <span className="text-sm block">Recovered</span>
-            </span>
-          </ListRowContainerSecondItem>
-          {/* {globalData.slice(5, 10).map((country: ICountry) => {
+    <main>
+      <GlobalOverview countries={globalData} />
+      <div className="text-gray-800 sm:text-base text-sm antialiased">
+        <ul>
+          <ListRowContainer index={1}>
+            <ListRowContainerFirstItem>
+              <h2 className="text-2xl m-auto font-bold">Region</h2>
+            </ListRowContainerFirstItem>
+            <ListRowContainerSecondItem>
+              <span className="text-red-600 bg-red-400 text-5xl flex-grow text-center overflow-hidden">
+                <i className="fas fa-cross"></i>
+                <span className="text-sm block">Deaths</span>
+              </span>
+              <span className="text-yellow-600 bg-yellow-400 text-5xl flex-grow text-center overflow-hidden">
+                <i className="fas fa-biohazard"></i>
+                <span className="text-sm block">Confirmed</span>
+              </span>
+              <span className="text-green-600 bg-green-400 text-5xl flex-grow text-center overflow-hidden">
+                <i className="fas fa-heart"></i>
+                <span className="text-sm block">Recovered</span>
+              </span>
+            </ListRowContainerSecondItem>
+            {/* {globalData.slice(5, 10).map((country: ICountry) => {
             console.log(country.timeSeries)
             return (
               <div>
@@ -244,19 +250,20 @@ const App = () => {
               </div>
             )
           })} */}
-        </ListRowContainer>
-        {globalData.slice(1).map((country: ICountry, index: number) => {
-          return (
-            <CountryItem
-              key={`${country.region}`}
-              country={country}
-              index={index}
-              toggleCountry={toggleCountry}
-            />
-          )
-        })}
-      </ul>
-    </div>
+          </ListRowContainer>
+          {globalData.slice(1).map((country: ICountry, index: number) => {
+            return (
+              <CountryItem
+                key={`${country.region}`}
+                country={country}
+                index={index}
+                toggleCountry={toggleCountry}
+              />
+            )
+          })}
+        </ul>
+      </div>
+    </main>
   )
 }
 

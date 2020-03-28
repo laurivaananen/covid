@@ -2,7 +2,6 @@ import React from "react"
 import { ICountry } from "./App"
 import { ListRowContainer, ListRowContainerFirstItem, ListRowContainerSecondItem } from "./ListItem"
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts"
-import * as Victory from "victory"
 
 export interface ICountryItemProps {
   country: ICountry
@@ -10,7 +9,7 @@ export interface ICountryItemProps {
   toggleCountry: (country: ICountry) => void
 }
 
-const buildInfectionRatePercentage = (rate: number) => {
+export const buildInfectionRatePercentage = (rate: number) => {
   const countryInfectionRate = Math.round(rate)
   if (countryInfectionRate > 100) {
     return <span className={`text-red-400 font-bold`}>+{countryInfectionRate}%</span>
