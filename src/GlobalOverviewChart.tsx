@@ -100,12 +100,7 @@ const CountryLine = (
 
 const LineLabel: React.FC<{ point: LinePoint; color: string }> = ({ point, color }) => {
   return point.index % 5 === 4 ? (
-    <text
-      x={point.x}
-      y={point.y}
-      textAnchor="middle"
-      className="text-gray-600 fill-current zIndex-50"
-    >
+    <text x={point.x} y={point.y} textAnchor="middle" className="text-gray-600 fill-current">
       <tspan x={point.x} dy="-0.335em">
         {point.value}
       </tspan>
