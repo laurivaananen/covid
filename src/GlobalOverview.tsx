@@ -28,8 +28,8 @@ export const GlobalOverview: React.FC<{ countries: ICountry[] }> = ({ countries 
                 </span>
               </dd>
             </dl>
-            <GlobalOverviewChart countries={countries} />
-            <GlobalComparisonChart countries={countries} />
+            <GlobalOverviewChart countries={countries.slice(1, 10)} />
+            <GlobalComparisonChart countries={countries.slice(1, 10)} />
           </div>
         ) : null}
       </div>

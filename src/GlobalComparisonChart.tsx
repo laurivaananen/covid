@@ -33,7 +33,7 @@ export const GlobalComparisonChart: React.FC<{ countries: ICountry[] }> = ({ cou
           right: 20,
         }}
         barGap={0}
-        data={countries.slice(1, 4).map((country: ICountry) => ({
+        data={countries.map((country: ICountry) => ({
           name: country.region,
           confirmed: country.total.confirmed,
           deaths: country.total.deaths,

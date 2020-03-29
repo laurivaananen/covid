@@ -54,16 +54,16 @@ const App = () => {
 
   const FetchData = async () => {
     const confirmedTimeSeries = await axios(
-      // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-      "http://localhost:3000/data.csv"
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+      // "http://localhost:3000/data.csv"
     )
     const deathsTimeSeries = await axios(
-      "http://localhost:3000/deaths.csv"
-      // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+      // "http://localhost:3000/deaths.csv"
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
     )
     const recoveredTimeSeries = await axios(
-      "http://localhost:3000/recovered.csv"
-      // "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+      // "http://localhost:3000/recovered.csv"
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
     )
     const parsedConfirmedData: string[][] = parse(confirmedTimeSeries.data)
     const parsedDeathsData: string[][] = parse(deathsTimeSeries.data)

@@ -40,19 +40,17 @@ export const GlobalOverviewChart: React.FC<{ countries: ICountry[] }> = ({ count
           data={countries[1].timeSeries}
         >
           <CartesianGrid stroke="#eeeeee" />
-          {countries
-            .slice(1)
-            .map((country: ICountry, index: number) =>
-              CountryLine(
-                country,
-                LineColors[index],
-                lineHover === index,
-                lineHover !== index && lineHover !== undefined,
-                () => setLineHover(index),
-                () => setLineHover(undefined),
-                selectedCase
-              )
-            )}
+          {countries.map((country: ICountry, index: number) =>
+            CountryLine(
+              country,
+              LineColors[index],
+              lineHover === index,
+              lineHover !== index && lineHover !== undefined,
+              () => setLineHover(index),
+              () => setLineHover(undefined),
+              selectedCase
+            )
+          )}
           <Legend
             onMouseEnter={(...args: any[]) => setLineHover(args[1])}
             onMouseLeave={(...args: any[]) => setLineHover(undefined)}
